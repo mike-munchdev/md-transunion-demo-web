@@ -31,7 +31,7 @@ const Home: React.FC = ({ children }) => {
         {isLoggedIn && clientInfo && token ? (
           <Fragment></Fragment>
         ) : (
-          <Container>
+          <Container >
             <Formik
               initialValues={{
                 code: '',
@@ -39,6 +39,7 @@ const Home: React.FC = ({ children }) => {
               validationSchema={homeSchema}
               onSubmit={(values, { resetForm, setErrors, setSubmitting }) => {
                 console.log('submitting successful form', values);
+                
               }}
             >
               {(formikProps) => {
@@ -48,12 +49,13 @@ const Home: React.FC = ({ children }) => {
                   <Form onSubmit={handleSubmit}>
                     <Field name="code">
                       {(props: FieldProps) => (
-                        <div>
+                        <div className="container-column">
                           <Form.Field
+                            width={3}
                             control={Input}
                             {...props.field}
                             type="text"
-                            placeholder="code"
+                            placeholder="Enter Code"
                             error={
                               props.form.touched[props.field.name] &&
                               props.form.errors[props.field.name]
@@ -68,7 +70,7 @@ const Home: React.FC = ({ children }) => {
                         </div>
                       )}
                     </Field>                    
-                    <Button type="submit" color="blue">
+                    <Button type="submit" color="blue" className="form-submit-button">
                       Submit
                     </Button>
                   </Form>

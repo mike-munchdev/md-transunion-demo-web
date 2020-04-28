@@ -9,3 +9,12 @@
   ) !important;
   height: 100vh;
 }
+.container-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-submit-button {
+  margin-top: 1rem !important;
+}
