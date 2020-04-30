@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import {
   IAccountsData,
@@ -7,9 +7,17 @@ import {
 } from '../../graphql/models/account';
 import AccountList from '../../components/AccountList/AccountList';
 import { GET_ACCOUNTS_FOR_USER } from '../../graphql/queries/accounts';
+import { useParams, RouteComponentProps } from 'react-router-dom';
 
-const Accounts = () => {
+export interface IAccountRouteParams {
+  code: string;
+}
+const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = ({
+  match,
+  history
+}) => {
   const [accounts, setAccounts] = useState<IAccount[] | undefined>();
+  // const {code} = useParams();
   const { loading } = useQuery<
     { getAccountsForUser: IAccountsData },
     IAccountDataVars

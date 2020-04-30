@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http';
 import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-
+import { setContext } from 'apollo-link-context';
 // Create an http link:
 const httpLink = new HttpLink({
   uri: 'http://localhost:4001/graphql',
@@ -18,6 +18,17 @@ const wsLink = new WebSocketLink({
   },
 });
 
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('token');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      ['x-auth']: token,
+    },
+  };
+});
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
 const link = split(
@@ -33,4 +44,16 @@ const link = split(
   httpLink
 );
 
-export default new ApolloClient({ link, cache: new InMemoryCache() });
+const cache = new InMemoryCache();
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem('token'),
+    token: localStorage.getItem('token'),
+    customer: null,
+  },
+});
+
+export default new ApolloClient({
+  link: authLink.concat(link),
+  cache,
+});

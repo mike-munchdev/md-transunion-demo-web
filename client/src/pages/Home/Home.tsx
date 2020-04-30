@@ -1,84 +1,112 @@
 import React, { Fragment } from 'react';
-import {
-  Segment,
-  Container,
-  Header,
-  Button,
-  
-  Form,
-  Input,
-} from 'semantic-ui-react';
-import { useApolloClient, useQuery } from '@apollo/react-hooks';
+import { Segment, Container, Header, Button, Form } from 'semantic-ui-react';
+import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
 import { Formik, Field, FieldProps } from 'formik';
+import { useToasts } from 'react-toast-notifications';
 
-import { IClient } from '../../graphql/models/client';
+import { ICustomer } from '../../graphql/models/customer';
 import { homeSchema } from '../../validation/homeSchema';
+import { GET_TOKEN_BY_CODE_AND_PHONE_NUMBER } from '../../graphql/queries/tokens';
+import { useHistory } from 'react-router-dom';
+import { TextInput } from '../../components/FormFields';
+import { IError } from '../../graphql/models/error';
+import { ApolloError } from 'apollo-client';
 
-const Home: React.FC = ({ children }) => { 
+const Home: React.FC = ({ children }) => {
+  const { addToast } = useToasts();
+  const client = useApolloClient();
+  let history = useHistory();
+  const [getTokenByCodeAndPhoneNumber, { loading }] = useLazyQuery(
+    GET_TOKEN_BY_CODE_AND_PHONE_NUMBER,
+    {
+      onError: (e: ApolloError) => {},
+      onCompleted: ({ getTokenByCodeAndPhoneNumber }) => {
+        const { ok, token, errors } = getTokenByCodeAndPhoneNumber;
 
-  // const { data, client } = useQuery(GET_CLIENT_INFORMATION);
-  // console.log('data', data);
+        if (ok) {
+          if (!token) {
+            addToast('No customer found with the given information.', {
+              appearance: 'error',
+            });
+          } else {
+            // add client info to local cache and move to accounts page
+            localStorage.setItem('token', token);
 
-  const isLoggedIn = false;
-  const clientInfo: IClient | null = null;
-  const token: string | null = null;
+            client.writeData({
+              data: {
+                isLoggedIn: true,
+                token,
+              },
+            });
+
+            history.push(`/customer`);
+          }
+        } else {
+          errors.forEach((e: IError) => {
+            addToast(e.message, { appearance: 'error' });
+          });
+        }
+      },
+    }
+  );
   return (
     <Segment inverted textAlign="center" vertical className="masthead">
       <Container text>
         <Header as="h1" inverted>
           Meredian Credit Services
         </Header>
-        {isLoggedIn && clientInfo && token ? (
-          <Fragment></Fragment>
-        ) : (
-          <Container >
-            <Formik
-              initialValues={{
-                code: '',
-              }}
-              validationSchema={homeSchema}
-              onSubmit={(values, { resetForm, setErrors, setSubmitting }) => {
-                console.log('submitting successful form', values);
-                
-              }}
-            >
-              {(formikProps) => {
-                const { handleSubmit } = formikProps;
 
-                return (
-                  <Form onSubmit={handleSubmit}>
-                    <Field name="code">
-                      {(props: FieldProps) => (
-                        <div className="container-column">
-                          <Form.Field
-                            width={3}
-                            control={Input}
-                            {...props.field}
-                            type="text"
-                            placeholder="Enter Code"
-                            error={
-                              props.form.touched[props.field.name] &&
-                              props.form.errors[props.field.name]
-                                ? {
-                                    content:
-                                      props.form.errors[props.field.name],
-                                    pointing: 'below',
-                                  }
-                                : null
-                            }
-                          />                         
-                        </div>
-                      )}
-                    </Field>                    
-                    <Button type="submit" color="blue" className="form-submit-button">
+        <Container>
+          <Formik
+            initialValues={{
+              code: '',
+              phoneNumber: '',
+            }}
+            validationSchema={homeSchema}
+            onSubmit={(values, { resetForm, setErrors, setSubmitting }) => {
+              const { phoneNumber, code } = values;
+              getTokenByCodeAndPhoneNumber({
+                variables: { code, phoneNumber },
+              });
+            }}
+          >
+            {(formikProps) => {
+              const { handleSubmit, handleReset } = formikProps;
+
+              return (
+                <Form
+                  onSubmit={handleSubmit}
+                  loading={loading}
+                  className="home-form"
+                >
+                  <Field name="code">
+                    {(props: FieldProps) => (
+                      <TextInput
+                        fieldProps={props}
+                        placeholder="Enter code"
+                        width={4}
+                      />
+                    )}
+                  </Field>
+                  <Field name="phoneNumber">
+                    {(props: FieldProps) => (
+                      <TextInput
+                        fieldProps={props}
+                        placeholder="Enter phone number"
+                        width={4}
+                      />
+                    )}
+                  </Field>
+                  <Form.Group inline className="container-column">
+                    <Form.Button type="submit" primary>
                       Submit
-                    </Button>
-                  </Form>
-                );
-              }}
-            </Formik>
-          </Container>
-        )}
+                    </Form.Button>
+                  </Form.Group>
+                </Form>
+              );
+            }}
+          </Formik>
+        </Container>
       </Container>
     </Segment>
   );

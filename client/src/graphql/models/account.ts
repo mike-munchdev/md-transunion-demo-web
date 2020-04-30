@@ -1,6 +1,4 @@
-export interface IError {
-  message: string;
-}
+import { IError } from './error';
 
 export interface IAccount {
   id: string;

@@ -13,8 +13,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 0.5rem !important;
 }
 
 .form-submit-button {
   margin-top: 1rem !important;
+}
+
+.home-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
