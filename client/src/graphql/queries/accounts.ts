@@ -1,20 +1,23 @@
 import gql from 'graphql-tag';
 
 const accountsStructure = `{
+    id
     creditorName
     balance
     limit
     availableCredit
-    rating
-    acctNumber
+    accountRating
+    accountNumber
     paymentDate
+    status
 }`;
 
-export const GET_ACCOUNTS_FOR_USER = gql`
-  query GetAccountsForUser($id: Int!) {
-    getAccountsForUser(id: $id) {
+export const GET_ACCOUNTS_FOR_CUSTOMER = gql`
+  query GetAccountsForCustomer($customerId: String!) {
+    getAccountsForCustomer(customerId: $customerId) {
       ok
-      accounts ${accountsStructure}
+      validAccounts ${accountsStructure}
+      invalidAccounts ${accountsStructure}
       errors {        
         message
       }

@@ -6,7 +6,6 @@ import {
   DropdownItemProps,
   FormSelectProps,
 } from 'semantic-ui-react';
-import { FieldProps } from 'formik';
 
 interface ISelectInputProps extends FormSelectProps {
   width: SemanticWIDTHS;
@@ -37,7 +36,7 @@ const SelectInput: React.FC<ISelectInputProps> = (props) => {
       label={label || null}
       id={field.name}
       name={field.name}
-      onBlur={(e) => {
+      onBlur={() => {
         setTouched(field.name, true);
       }}
       onChange={(e, { value }) => {

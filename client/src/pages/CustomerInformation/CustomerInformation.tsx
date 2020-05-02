@@ -1,48 +1,47 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Message, Form, FormSelectProps, Select } from 'semantic-ui-react';
+import React, { useState, Fragment } from 'react';
+import { Message, Form } from 'semantic-ui-react';
 import { Field, Formik, FieldProps } from 'formik';
-import jwt from 'jsonwebtoken';
 import { RouteComponentProps } from 'react-router-dom';
 import { IAccountRouteParams } from '../Accounts/Accounts';
 import { customerInfoSchema } from '../../validation/customerInfoSchema';
 import { TextInput, SelectInput } from '../../components/FormFields';
-import states from '../../utils/states';
+import {stateOptions} from '../../utils/states';
 import LoadingComponent from '../../components/Loading/Loading';
-import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
-import {
-  GET_TOKEN_CLIENT,
-  GET_CUSTOMER_CLIENT,
-} from '../../graphql/queries/localState';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { useToasts } from 'react-toast-notifications';
 import {
   UPDATE_CUSTOMER,
   GET_CUSTOMER_BY_ID,
 } from '../../graphql/queries/customers';
-import { ICustomer } from '../../graphql/models/customer';
+import { useCustomerInfo } from '../../utils/customerInfo';
 
 const CustomerInformation: React.FC<RouteComponentProps<
   IAccountRouteParams
->> = ({ match, history }) => {
+>> = ({ history }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [displayCustomer, setDisplayCustomer] = useState(null);
   const [customer, setCustomer] = useState(null);
   const { addToast } = useToasts();
   const [callUpdateCustomer] = useMutation(UPDATE_CUSTOMER);
 
-  const {
-    data: { token },
-  } = useQuery(GET_TOKEN_CLIENT);
-
-  const decoded = jwt.decode(token);
-  const decodedCustomer = (decoded as any).info;
+  const customerInfo = useCustomerInfo();
 
   const { data } = useQuery(GET_CUSTOMER_BY_ID, {
     variables: {
-      customerId: decodedCustomer.id,
+      customerId: customerInfo.id,
+    },
+    fetchPolicy: 'network-only',
+    onError: (error) => {
+      console.log('error', error);
+      setIsLoading(false);
+      addToast(
+        'An error occurred retriving customer information. Please try again.',
+        { appearance: 'error' }
+      );
     },
     onCompleted: ({ getCustomerById }) => {
       if (getCustomerById.ok) {
-        setDisplayCustomer(decodedCustomer);
+        setDisplayCustomer(customerInfo);
         setCustomer(getCustomerById.customer);
       } else {
         addToast(
@@ -75,16 +74,26 @@ const CustomerInformation: React.FC<RouteComponentProps<
           address2: customer.address2 || '',
           city: customer.city || '',
           state: customer.state || '',
-          zip: customer.zipe || '',
+          zip: customer.zip || '',
+          phoneNumber: customer.phoneNumber || '',
         }}
         validationSchema={customerInfoSchema}
-        onSubmit={async (values, { resetForm, setErrors, setSubmitting }) => {
-          const { data } = await callUpdateCustomer({
-            variables: values,
+        onSubmit={async (values) => {
+          const {
+            data: { updateCustomer },
+          } = await callUpdateCustomer({
+            variables: { input: { ...values, customerId: customerInfo.id } },
           });
+          
 
-          if (data) {
-            return data.classRegistration;
+          if (updateCustomer.ok) {
+            // redirect to accounts page
+            history.push(`/accounts`);
+          } else {
+            addToast(
+              'An error occurred saving customer information. Please try again.',
+              { appearance: 'error' }
+            );
           }
         }}
       >
@@ -95,10 +104,11 @@ const CustomerInformation: React.FC<RouteComponentProps<
             setFieldValue,
             setFieldTouched,
             isValid,
+            isSubmitting,
           } = formikProps;
           return (
             <Form onSubmit={handleSubmit}>
-              <Form.Group unstackable widths={3}>
+              <Form.Group widths={3}>
                 <Field name="firstName">
                   {(props: FieldProps) => (
                     <TextInput
@@ -130,7 +140,7 @@ const CustomerInformation: React.FC<RouteComponentProps<
                   )}
                 </Field>
               </Form.Group>
-              <Form.Group unstackable widths={3}>
+              <Form.Group widths={3}>
                 <Field name="address">
                   {(props: FieldProps) => (
                     <TextInput
@@ -162,29 +172,27 @@ const CustomerInformation: React.FC<RouteComponentProps<
                   )}
                 </Field>
               </Form.Group>
-              <Form.Group unstackable widths={2}>
+              <Form.Group widths={3}>
+                <Field name="phoneNumber">
+                  {(props: FieldProps) => (
+                    <TextInput
+                      label="Phone Number"
+                      fieldProps={props}
+                      placeholder="Phone Number"
+                      width={5}
+                    />
+                  )}
+                </Field>
                 <Field
                   name="state"
                   placeholder="State"
                   component={SelectInput}
-                  width={10}
-                  options={states}
+                  width={5}
+                  options={stateOptions}
                   setValue={setFieldValue}
                   setTouched={setFieldTouched}
                   label="State"
                 />
-                {/* <Field name="state" >
-                   {(props: FormSelectProps) => (
-                    <SelectInput                      
-                      label="State"
-                      formSelectProps={props}
-                      placeholder="State"
-                      width={10}
-                      options={states}
-                      handleChange={setFieldValue}
-                    />
-                  )}
-                </Field>                */}
                 <Field name="zip">
                   {(props: FieldProps) => (
                     <TextInput
@@ -198,10 +206,16 @@ const CustomerInformation: React.FC<RouteComponentProps<
               </Form.Group>
 
               <Form.Group inline>
-                <Form.Button primary disabled={!isValid}>
+                <Form.Button
+                  primary
+                  disabled={!isValid || isSubmitting}
+                  type="submit"
+                >
                   Submit
                 </Form.Button>
-                <Form.Button onClick={handleReset}>Reset</Form.Button>
+                <Form.Button onClick={handleReset} disabled={isSubmitting}>
+                  Reset
+                </Form.Button>
               </Form.Group>
             </Form>
           );

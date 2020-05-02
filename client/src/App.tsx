@@ -16,12 +16,11 @@ import PrivateRoute from './layout/PrivateRoute';
 import { NavBar } from './components/NavBar';
 import { Container } from 'semantic-ui-react';
 import NotFound from './layout/NotFound';
-import { CustomerInformation } from './pages/CustomerInformation';
 
-const App: React.FC<RouteComponentProps> = ({ location }) => {
+const App: React.FC<RouteComponentProps> = () => {
   return (
     <ApolloProvider client={client}>
-      <ToastProvider placement="top-right">
+      <ToastProvider placement="top-right" autoDismiss={true} >
         <Route path="/" exact>
           <Home />
         </Route>
@@ -32,11 +31,11 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
               <NavBar />
               <Container style={{ marginTop: '7em' }}>
                 <Switch>
-                  <PrivateRoute
+                  {/* <PrivateRoute
                     exact
                     path="/customer"
                     component={CustomerInformation}
-                  />
+                  /> */}
                   <PrivateRoute exact path="/accounts" component={Accounts} />
 
                   <Route component={NotFound} />

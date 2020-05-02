@@ -6,17 +6,18 @@ export interface IAccount {
   balance: number;
   limit: number;
   availableCredit: number;
-  rating: string;
-  acctNumber: string;
+  accountRating: number;
+  accountNumber: string;
   paymentDate: Date;
 }
 
 export interface IAccountsData {
   ok: boolean;
-  accounts: IAccount[];
+  validAccounts: IAccount[];
+  invalidAccounts: IAccount[];
   errors: IError[];
 }
 
 export interface IAccountDataVars {
-  id: number;
+  customerId: string;
 }

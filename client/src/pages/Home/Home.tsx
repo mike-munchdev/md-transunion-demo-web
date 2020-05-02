@@ -1,10 +1,9 @@
-import React, { Fragment } from 'react';
-import { Segment, Container, Header, Button, Form } from 'semantic-ui-react';
+import React from 'react';
+import { Segment, Container, Header, Form } from 'semantic-ui-react';
 import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
 import { Formik, Field, FieldProps } from 'formik';
 import { useToasts } from 'react-toast-notifications';
 
-import { ICustomer } from '../../graphql/models/customer';
 import { homeSchema } from '../../validation/homeSchema';
 import { GET_TOKEN_BY_CODE_AND_PHONE_NUMBER } from '../../graphql/queries/tokens';
 import { useHistory } from 'react-router-dom';
@@ -12,14 +11,19 @@ import { TextInput } from '../../components/FormFields';
 import { IError } from '../../graphql/models/error';
 import { ApolloError } from 'apollo-client';
 
-const Home: React.FC = ({ children }) => {
+const Home: React.FC = () => {
   const { addToast } = useToasts();
   const client = useApolloClient();
   let history = useHistory();
   const [getTokenByCodeAndPhoneNumber, { loading }] = useLazyQuery(
     GET_TOKEN_BY_CODE_AND_PHONE_NUMBER,
     {
-      onError: (e: ApolloError) => {},
+      onError: (e: ApolloError) => {
+        addToast(
+          'An error occurred retriving customer information. Please try again.',
+          { appearance: 'error' }
+        );
+      },
       onCompleted: ({ getTokenByCodeAndPhoneNumber }) => {
         const { ok, token, errors } = getTokenByCodeAndPhoneNumber;
 
@@ -39,7 +43,7 @@ const Home: React.FC = ({ children }) => {
               },
             });
 
-            history.push(`/customer`);
+            history.push(`/accounts`);
           }
         } else {
           errors.forEach((e: IError) => {
@@ -49,6 +53,7 @@ const Home: React.FC = ({ children }) => {
       },
     }
   );
+
   return (
     <Segment inverted textAlign="center" vertical className="masthead">
       <Container text>
@@ -63,15 +68,16 @@ const Home: React.FC = ({ children }) => {
               phoneNumber: '',
             }}
             validationSchema={homeSchema}
-            onSubmit={(values, { resetForm, setErrors, setSubmitting }) => {
+            onSubmit={(values, {setSubmitting}) => {
               const { phoneNumber, code } = values;
               getTokenByCodeAndPhoneNumber({
                 variables: { code, phoneNumber },
               });
+              setSubmitting(false);
             }}
           >
             {(formikProps) => {
-              const { handleSubmit, handleReset } = formikProps;
+              const { handleSubmit, handleReset, isSubmitting } = formikProps;
 
               return (
                 <Form
@@ -79,12 +85,13 @@ const Home: React.FC = ({ children }) => {
                   loading={loading}
                   className="home-form"
                 >
+                  
                   <Field name="code">
                     {(props: FieldProps) => (
                       <TextInput
                         fieldProps={props}
                         placeholder="Enter code"
-                        width={4}
+                        width={6}
                       />
                     )}
                   </Field>
@@ -93,13 +100,16 @@ const Home: React.FC = ({ children }) => {
                       <TextInput
                         fieldProps={props}
                         placeholder="Enter phone number"
-                        width={4}
+                        width={6}
                       />
                     )}
                   </Field>
-                  <Form.Group inline className="container-column">
-                    <Form.Button type="submit" primary>
+                  <Form.Group inline>
+                    <Form.Button type="submit" primary disabled={isSubmitting}>
                       Submit
+                    </Form.Button>
+                    <Form.Button onClick={handleReset} disabled={isSubmitting}>
+                      Reset
                     </Form.Button>
                   </Form.Group>
                 </Form>

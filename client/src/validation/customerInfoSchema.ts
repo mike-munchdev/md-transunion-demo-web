@@ -5,7 +5,7 @@ export const customerInfoSchema = yup.object().shape({
   lastName: yup.string().required('Last Name is required'),
   ssn: yup.string().required('Social Security Number is required'),
   address: yup.string().required('Address is required'),
-
+  phoneNumber: yup.string().required('Phone Number is required'),
   city: yup.string().required('City is required'),
   state: yup.string().required('State is required'),
   zip: yup.string().required('Zip Code is required'),

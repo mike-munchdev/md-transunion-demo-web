@@ -1,11 +1,10 @@
 import React from 'react';
 
 import {
-  FormFieldProps,
   Form,
-  Label,
   Input,
   SemanticWIDTHS,
+  Label,
 } from 'semantic-ui-react';
 import { FieldProps } from 'formik';
 
@@ -22,11 +21,12 @@ const TextInput: React.FC<ITextInputProps> = ({
   label,
   fieldProps: { form, field },
 }) => {
+  
   return (
-    <Form.Field
+    <Form.Input
       width={width}
       {...field}
-      control={Input}
+      
       type="text"
       placeholder={placeholder}
       label={label}
@@ -38,7 +38,10 @@ const TextInput: React.FC<ITextInputProps> = ({
             }
           : null
       }
-    ></Form.Field>
+    >
+      {label && <Label>{label}</Label>}
+      <Input placeholder={placeholder} error={form.touched[field.name] != null && form.errors[field.name] != null}></Input>
+    </Form.Input>
   );
 };
 

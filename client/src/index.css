@@ -26,3 +26,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.accounts-accordian {
+  margin-top: 40px !important;
+}

@@ -28,7 +28,7 @@ export const GET_CUSTOMER_BY_ID = gql`
 `;
 
 export const UPDATE_CUSTOMER = gql`
-  mutation UpdateCustomer($input: MutateCustomerInput) {
+  mutation UpdateCustomer($input: UpdateCustomerInput) {
     updateCustomer(input: $input) {
       ok
       customer ${customersStructure}
@@ -40,7 +40,7 @@ export const UPDATE_CUSTOMER = gql`
 `;
 
 export const CREATE_CUSTOMER = gql`
-  mutation CreateCustomer($input: MutateCustomerInput) {
+  mutation CreateCustomer($input: CreateCustomerInput) {
     createCustomer(input: $input) {
       ok
       customer ${customersStructure}
