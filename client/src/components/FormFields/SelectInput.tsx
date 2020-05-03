@@ -32,6 +32,7 @@ const SelectInput: React.FC<ISelectInputProps> = (props) => {
 
   return (
     <Form.Select
+      search
       width={width}
       label={label || null}
       id={field.name}

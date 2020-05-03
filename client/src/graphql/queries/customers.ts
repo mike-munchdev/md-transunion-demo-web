@@ -5,7 +5,9 @@ const customersStructure = `{
   code
   email
   firstName
+  middleName
   lastName
+  suffix
   phoneNumber
   ssn
   address
@@ -13,6 +15,7 @@ const customersStructure = `{
   city
   state
   zip
+  accountCount
   }`;
 
 export const GET_CUSTOMER_BY_ID = gql`

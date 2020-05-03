@@ -1,7 +1,7 @@
 import React from 'react';
-import { Segment, Container, Header, Form } from 'semantic-ui-react';
+import { Segment, Container, Header, Form, Message } from 'semantic-ui-react';
 import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
-import { Formik, Field, FieldProps } from 'formik';
+import { Formik, Field, FieldProps, FormikErrors } from 'formik';
 import { useToasts } from 'react-toast-notifications';
 
 import { homeSchema } from '../../validation/homeSchema';
@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 import { TextInput } from '../../components/FormFields';
 import { IError } from '../../graphql/models/error';
 import { ApolloError } from 'apollo-client';
+import FormError from '../../components/Errors/FormError';
 
 const Home: React.FC = () => {
   const { addToast } = useToasts();
@@ -68,7 +69,7 @@ const Home: React.FC = () => {
               phoneNumber: '',
             }}
             validationSchema={homeSchema}
-            onSubmit={(values, {setSubmitting}) => {
+            onSubmit={(values, { setSubmitting }) => {
               const { phoneNumber, code } = values;
               getTokenByCodeAndPhoneNumber({
                 variables: { code, phoneNumber },
@@ -77,7 +78,13 @@ const Home: React.FC = () => {
             }}
           >
             {(formikProps) => {
-              const { handleSubmit, handleReset, isSubmitting } = formikProps;
+              const {
+                handleSubmit,
+                handleReset,
+                isSubmitting,
+                errors,
+                touched,
+              } = formikProps;
 
               return (
                 <Form
@@ -85,7 +92,6 @@ const Home: React.FC = () => {
                   loading={loading}
                   className="home-form"
                 >
-                  
                   <Field name="code">
                     {(props: FieldProps) => (
                       <TextInput
@@ -112,6 +118,15 @@ const Home: React.FC = () => {
                       Reset
                     </Form.Button>
                   </Form.Group>
+                  {Object.keys(errors).length > 0 && (
+                    <Message error visible={true}>
+                      {Object.keys(errors).map((key: string) => {
+                        return (touched as any)[key] !== undefined ? (
+                          <FormError error={(errors as any)[key]} key={key} />
+                        ) : null;
+                      })}
+                    </Message>
+                  )}
                 </Form>
               );
             }}

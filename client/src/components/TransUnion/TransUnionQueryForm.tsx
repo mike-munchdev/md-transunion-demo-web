@@ -4,22 +4,32 @@ import { TextInput, SelectInput } from '../FormFields';
 import { Form } from 'semantic-ui-react';
 import { stateOptions } from '../../utils/states';
 import { transUnionQuerySchema } from '../../validation/transUnionQuerySchema';
+import { ICustomer } from '../../graphql/models/customer';
 
-const TransUnionQueryForm = () => {
+export interface ITransUnionQueryFormProps {
+  customer: ICustomer;
+}
+const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
+  customer,
+}) => {
   return (
     <Formik
       initialValues={{
-        firstName: '',
-        lastName: '',
-        ssn: '',
-        address: '',
-        address2: '',
-        city: '',
-        state: '',
-        zip: '',
+        firstName: customer.firstName || '',
+        middleName: customer.middleName || '',
+        lastName: customer.lastName || '',
+        suffix: customer.suffix || '',
+        ssn: customer.ssn || '',
+        address: customer.address || '',
+        address2: customer.address2 || '',
+        city: customer.city || '',
+        state: customer.state || '',
+        zip: customer.zip || '',
       }}
       validationSchema={transUnionQuerySchema}
-      onSubmit={async () => {}}
+      onSubmit={async (values, { setSubmitting }) => {
+        console.log('submitting with values', values);
+      }}
     >
       {(formikProps) => {
         const {
@@ -33,74 +43,61 @@ const TransUnionQueryForm = () => {
         return (
           <Form onSubmit={handleSubmit}>
             <Form.Group widths="equal">
+              <Field name="ssn">
+                {(props: FieldProps) => (
+                  <TextInput label="ssn" fieldProps={props} />
+                )}
+              </Field>
               <Field name="firstName">
                 {(props: FieldProps) => (
-                  <TextInput
-                    fieldProps={props}
-                    placeholder="First Name"
-                    width={5}
-                  />
+                  <TextInput label="first name" fieldProps={props} />
+                )}
+              </Field>
+              <Field name="middleName">
+                {(props: FieldProps) => (
+                  <TextInput label="middle" fieldProps={props} />
                 )}
               </Field>
               <Field name="lastName">
                 {(props: FieldProps) => (
-                  <TextInput
-                    fieldProps={props}
-                    placeholder="Last Name"
-                    width={5}
-                  />
+                  <TextInput label="last name" fieldProps={props} />
                 )}
               </Field>
-              <Field name="ssn">
+              <Field name="suffix">
                 {(props: FieldProps) => (
-                  <TextInput
-                    fieldProps={props}
-                    placeholder="SSN"
-                    width={5}
-                  />
+                  <TextInput label="suffix" fieldProps={props} />
                 )}
               </Field>
-
+            </Form.Group>
+            <Form.Group widths="equal">
               <Field name="address">
                 {(props: FieldProps) => (
-                  <TextInput
-                    fieldProps={props}
-                    placeholder="Address"
-                    width={5}
-                  />
+                  <TextInput label="address" fieldProps={props} />
                 )}
               </Field>
               <Field name="address2">
                 {(props: FieldProps) => (
-                  <TextInput
-                    fieldProps={props}
-                    placeholder="Address 2"
-                    width={5}
-                  />
+                  <TextInput label="address 2" fieldProps={props} />
                 )}
               </Field>
               <Field name="city">
                 {(props: FieldProps) => (
-                  <TextInput fieldProps={props} placeholder="City" width={5} />
+                  <TextInput label="city" fieldProps={props} />
                 )}
               </Field>
 
               <Field
+                label="state"
                 name="state"
-                placeholder="State"
                 component={SelectInput}
-                width={5}
+                F
                 options={stateOptions}
                 setValue={setFieldValue}
                 setTouched={setFieldTouched}
               />
               <Field name="zip">
                 {(props: FieldProps) => (
-                  <TextInput
-                    fieldProps={props}
-                    placeholder="Zip Code"
-                    width={5}
-                  />
+                  <TextInput label="zip" fieldProps={props} />
                 )}
               </Field>
             </Form.Group>

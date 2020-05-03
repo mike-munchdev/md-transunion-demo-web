@@ -1,17 +1,12 @@
 import React from 'react';
 
-import {
-  Form,
-  Input,
-  SemanticWIDTHS,
-  Label,
-} from 'semantic-ui-react';
+import { Form, Input, SemanticWIDTHS, Label } from 'semantic-ui-react';
 import { FieldProps } from 'formik';
 
 interface ITextInputProps {
   fieldProps: FieldProps;
   placeholder?: string;
-  width: SemanticWIDTHS;
+  width?: SemanticWIDTHS;
   label?: string;
 }
 
@@ -21,27 +16,19 @@ const TextInput: React.FC<ITextInputProps> = ({
   label,
   fieldProps: { form, field },
 }) => {
-  
   return (
     <Form.Input
+      label={label}
       width={width}
       {...field}
-      
+      fluid
       type="text"
       placeholder={placeholder}
-      label={label}
       error={
-        form.touched[field.name] && form.errors[field.name]
-          ? {
-              content: form.errors[field.name],
-              pointing: 'below',
-            }
-          : null
+        form.touched[field.name] !== undefined &&
+        form.errors[field.name] != undefined
       }
-    >
-      {label && <Label>{label}</Label>}
-      <Input placeholder={placeholder} error={form.touched[field.name] != null && form.errors[field.name] != null}></Input>
-    </Form.Input>
+    />
   );
 };
 
