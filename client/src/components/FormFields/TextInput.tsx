@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Form, Input, SemanticWIDTHS, Label } from 'semantic-ui-react';
+import { Form, SemanticWIDTHS } from 'semantic-ui-react';
 import { FieldProps } from 'formik';
 
 interface ITextInputProps {
@@ -26,7 +26,7 @@ const TextInput: React.FC<ITextInputProps> = ({
       placeholder={placeholder}
       error={
         form.touched[field.name] !== undefined &&
-        form.errors[field.name] != undefined
+        form.errors[field.name] !== undefined
       }
     />
   );

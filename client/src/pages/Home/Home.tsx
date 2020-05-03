@@ -1,7 +1,7 @@
 import React from 'react';
-import { Segment, Container, Header, Form, Message } from 'semantic-ui-react';
+import { Segment, Container, Header, Form } from 'semantic-ui-react';
 import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
-import { Formik, Field, FieldProps, FormikErrors } from 'formik';
+import { Formik, Field, FieldProps } from 'formik';
 import { useToasts } from 'react-toast-notifications';
 
 import { homeSchema } from '../../validation/homeSchema';
@@ -10,7 +10,8 @@ import { useHistory } from 'react-router-dom';
 import { TextInput } from '../../components/FormFields';
 import { IError } from '../../graphql/models/error';
 import { ApolloError } from 'apollo-client';
-import FormError from '../../components/Errors/FormError';
+
+import { FormErrorList } from '../../components/Errors';
 
 const Home: React.FC = () => {
   const { addToast } = useToasts();
@@ -19,6 +20,7 @@ const Home: React.FC = () => {
   const [getTokenByCodeAndPhoneNumber, { loading }] = useLazyQuery(
     GET_TOKEN_BY_CODE_AND_PHONE_NUMBER,
     {
+      fetchPolicy: 'network-only',
       onError: (e: ApolloError) => {
         addToast(
           'An error occurred retriving customer information. Please try again.',
@@ -61,7 +63,6 @@ const Home: React.FC = () => {
         <Header as="h1" inverted>
           Meredian Credit Services
         </Header>
-
         <Container>
           <Formik
             initialValues={{
@@ -118,15 +119,7 @@ const Home: React.FC = () => {
                       Reset
                     </Form.Button>
                   </Form.Group>
-                  {Object.keys(errors).length > 0 && (
-                    <Message error visible={true}>
-                      {Object.keys(errors).map((key: string) => {
-                        return (touched as any)[key] !== undefined ? (
-                          <FormError error={(errors as any)[key]} key={key} />
-                        ) : null;
-                      })}
-                    </Message>
-                  )}
+                  <FormErrorList errors={errors} touched={touched} />
                 </Form>
               );
             }}

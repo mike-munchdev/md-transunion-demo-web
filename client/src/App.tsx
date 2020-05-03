@@ -29,7 +29,7 @@ const App: React.FC<RouteComponentProps> = () => {
           render={() => (
             <Fragment>
               <NavBar />
-              <Container style={{ marginTop: '7em' }}>
+              <Container style={{ marginTop: '4em' }}>
                 <Switch>
                   {/* <PrivateRoute
                     exact

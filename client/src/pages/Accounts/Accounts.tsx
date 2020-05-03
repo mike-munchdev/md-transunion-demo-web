@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 
-import {
-  IAccountsData,
-  IAccountDataVars,
-  IAccount,
-} from '../../graphql/models/account';
+import { IAccountsData, IAccount } from '../../graphql/models/account';
 import AccountList from '../../components/AccountList/AccountList';
 import { GET_ACCOUNTS_FOR_CUSTOMER } from '../../graphql/queries/accounts';
 import { RouteComponentProps } from 'react-router-dom';
@@ -13,32 +9,56 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 import LoadingComponent from '../../components/Loading/Loading';
 import { useCustomerInfo } from '../../utils/customerInfo';
-import { Accordion, Message, Segment } from 'semantic-ui-react';
+import { Accordion, Message, Segment, Header } from 'semantic-ui-react';
 import { TransUnionQueryForm } from '../../components/TransUnion';
-import { invalid } from 'moment';
 import { GET_CUSTOMER_BY_ID } from '../../graphql/queries/customers';
+import { ERRORS } from '../../constants/errors';
 
 export interface IAccountRouteParams {
   code: string;
 }
 const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
   const [customer, setCustomer] = useState(null);
-  const [validAccounts, setOpenAccounts] = useState<IAccount[] | undefined>();
-  const [invalidAccounts, setClosedAccounts] = useState<
-    IAccount[] | undefined
-  >();
+  const [validAccounts, setOpenAccounts] = useState<IAccount[] | undefined>([]);
+  const [invalidAccounts, setClosedAccounts] = useState<IAccount[] | undefined>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [
     closedAccountSegmentVisible,
     setClosedAccountSegmentVisible,
   ] = useState(false);
-  const [transUnionSegmentVisible, setTransUnionSegmentVisible] = useState(
-    true
-  );
+  
 
   const { addToast } = useToasts();
 
   const customerInfo = useCustomerInfo();
+
+  const [getAccountsForCustomer, { loading }] = useLazyQuery(
+    GET_ACCOUNTS_FOR_CUSTOMER,
+    {
+      variables: { customerId: customerInfo.id },
+      onError: () => {
+        setIsLoading(false);
+        addToast(
+          ERRORS.CUSTOMER.RETRIEVING_INFORMATION,
+          { appearance: 'error' }
+        );
+      },
+      onCompleted: ({ getAccountsForCustomer }) => {
+        if (getAccountsForCustomer.ok) {
+          setOpenAccounts(getAccountsForCustomer.validAccounts);
+          setClosedAccounts(getAccountsForCustomer.invalidAccounts);
+        } else {
+          addToast(
+            ERRORS.ACCOUNT.RETRIEVING_INFORMATION,
+            { appearance: 'error' }
+          );
+        }
+        setIsLoading(false);
+      },
+    }
+  );
 
   const { data } = useQuery(GET_CUSTOMER_BY_ID, {
     variables: {
@@ -49,83 +69,77 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
       console.log('error', error);
       setIsLoading(false);
       addToast(
-        'An error occurred retriving customer information. Please try again.',
+        ERRORS.CUSTOMER.RETRIEVING_INFORMATION,
         { appearance: 'error' }
       );
     },
-    onCompleted: ({ getCustomerById }) => {
+    onCompleted: ({ getCustomerById }) => {      
       if (getCustomerById.ok) {
         setCustomer(getCustomerById.customer);
+        if (getCustomerById.customer.accountCount > 0) {
+          getAccountsForCustomer({
+            variables: { customerId: customerInfo.id },
+          });
+        } else {
+          setIsLoading(false);
+        }
       } else {
         addToast(
-          'An error occurred retriving customer information. Please try again.',
+          ERRORS.CUSTOMER.RETRIEVING_INFORMATION,
           { appearance: 'error' }
         );
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     },
   });
-
-  const [getAccountsForCustomer, { loading }] = useLazyQuery(
-    GET_ACCOUNTS_FOR_CUSTOMER,
-    {
-      variables: { customerId: customerInfo.id },
-      onError: () => {
-        setIsLoading(false);
-        addToast(
-          'An error occurred retriving customer information. Please try again.',
-          { appearance: 'error' }
-        );
-      },
-      onCompleted: ({ getAccountsForCustomer }) => {
-        if (getAccountsForCustomer.ok) {
-          setOpenAccounts(getAccountsForCustomer.validAccounts);
-          setClosedAccounts(getAccountsForCustomer.invalidAccounts);
-        } else {
-          addToast(
-            'An error occurred retriving account information. Please try again.',
-            { appearance: 'error' }
-          );
-        }
-        setIsLoading(false);
-      },
+  
+  
+  const updateAccounts = (accounts: IAccountsData) => {
+    if (accounts.ok) {
+      setOpenAccounts(accounts.validAccounts);
+      setClosedAccounts(accounts.invalidAccounts);
+    } else {
+      addToast(
+        ERRORS.ACCOUNT.RETRIEVING_INFORMATION,
+        { appearance: 'error' }
+      );
     }
-  );
+    setIsLoading(false);
+  };
+
+  const setLoading = (isLoading: boolean) => {
+    setIsLoading(isLoading);
+  };
 
   if (isLoading) return <LoadingComponent />;
 
+  
   return (
     <div>
-      {customer.accountCount === 0 && (
+      <Header as="h2" icon>        
+        Account Information
+      </Header>
+      {validAccounts.length === 0 && invalidAccounts.length === 0 && (
         <Segment>
-          <Accordion>
-            <Accordion.Title
-              active={transUnionSegmentVisible}
-              index={0}
-              onClick={() =>
-                setTransUnionSegmentVisible(!transUnionSegmentVisible)
-              }
-            >
-              <h3 style={{ display: 'flex' }}>
-                <div style={{ marginRight: '20px' }}>Query TransUnion</div>
-                <div style={{ fontWeight: 'normal' }}>[Show/Hide]</div>
-              </h3>
-            </Accordion.Title>
-            <Accordion.Content active={transUnionSegmentVisible}>
-              <Message info>
-                <p>
-                  {`Welcome ${customerInfo.displayName}, please provide the following information to securely
+          <h3 style={{ display: 'flex' }}>
+            <div style={{ marginRight: '20px' }}>Query TransUnion</div>
+          </h3>
+
+          <Message info>
+            <p>
+              {`Welcome ${customerInfo.displayName}, please provide the following information to securely
           pull your creditor data from Transunion. This is soft pull and will
           not impact your credit score.`}
-                </p>
-              </Message>
-              <TransUnionQueryForm customer={customer} />
-            </Accordion.Content>
-          </Accordion>
+            </p>
+          </Message>
+          <TransUnionQueryForm
+            customer={customer}
+            updateAccounts={updateAccounts}
+            setLoading={setLoading}
+          />
         </Segment>
       )}
-      {validAccounts && (
+      {validAccounts.length > 0 && (
         <Segment>
           <h3>Valid Accounts</h3>
           <Message info>
@@ -141,7 +155,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
           )}
         </Segment>
       )}
-      {invalidAccounts && (
+      {invalidAccounts.length > 0 && (
         <Segment className="accounts-accordian">
           {loading ? (
             <p>Loading ...</p>

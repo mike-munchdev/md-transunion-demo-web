@@ -1,3 +1,4 @@
-import FormError from './FormError';
+import FormErrorItem from './FormErrorItem';
+import FormErrorList from './FormErrorList';
 
-export { FormError };
+export { FormErrorItem, FormErrorList };

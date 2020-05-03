@@ -27,7 +27,7 @@ export const GET_ACCOUNTS_FOR_CUSTOMER = gql`
 
 export const GET_ACCOUNT_INFORMATION_FROM_TRANSUNION = gql`
   query GetAccountInformationFromTransUnion($input: TransUnionInput!) {
-    getAccountInformationFromTransUnion(customerId: $customerId) {
+    getAccountInformationFromTransUnion(input: $input) {
       ok
       validAccounts ${accountsStructure}
       invalidAccounts ${accountsStructure}

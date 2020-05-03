@@ -13,27 +13,29 @@ const AccountList: React.FC<IAccountListProps> = ({
   accounts,
   rowsSelectable,
 }) => (
-  <Table
-    compact
-    celled={rowsSelectable}
-    definition={rowsSelectable}
-  >
+  <Table compact celled={rowsSelectable} definition={rowsSelectable}>
     <Table.Header>
       <Table.Row>
         {rowsSelectable ? <Table.HeaderCell /> : null}
-        <Table.HeaderCell>TU Creditor</Table.HeaderCell>
-        <Table.HeaderCell>Acct Balance</Table.HeaderCell>
-        <Table.HeaderCell>Limit</Table.HeaderCell>
-        <Table.HeaderCell>Available Credit</Table.HeaderCell>
-        <Table.HeaderCell>Rating</Table.HeaderCell>
-        <Table.HeaderCell>Account Number</Table.HeaderCell>
-        <Table.HeaderCell>Payment Date</Table.HeaderCell>
+        <Table.HeaderCell textAlign="left">TU Creditor</Table.HeaderCell>
+        <Table.HeaderCell textAlign="right">Acct Balance</Table.HeaderCell>
+        <Table.HeaderCell textAlign="right">Limit</Table.HeaderCell>
+        <Table.HeaderCell textAlign="right">Available Credit</Table.HeaderCell>
+        <Table.HeaderCell width={3} textAlign="center">Rating</Table.HeaderCell>
+        <Table.HeaderCell textAlign="right">Account Number</Table.HeaderCell>
+        <Table.HeaderCell textAlign="right">Payment Date</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
 
     <Table.Body>
       {accounts &&
-        accounts.map((account: IAccount) => <AccountItem rowSelectable={rowsSelectable}  account={account} />)}
+        accounts.map((account: IAccount) => (
+          <AccountItem
+            rowSelectable={rowsSelectable}
+            account={account}
+            key={account.id}
+          />
+        ))}
     </Table.Body>
   </Table>
 );

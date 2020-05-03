@@ -1,7 +1,7 @@
 import React from 'react';
 import { IAccount } from '../../graphql/models/account';
 import { Table, Checkbox } from 'semantic-ui-react';
-import Moment from 'react-moment';
+import moment from 'moment';
 export interface IAccountItemProps {
   account?: IAccount;
   rowSelectable: boolean;
@@ -12,6 +12,12 @@ const AccountItem: React.FC<IAccountItemProps> = ({
   rowSelectable,
 }) => {
   if (!account) return null;
+  const usdFormater = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
+  const paymentDate = moment(account.paymentDate);
   return (
     <Table.Row key={account.id}>
       {rowSelectable ? (
@@ -19,14 +25,20 @@ const AccountItem: React.FC<IAccountItemProps> = ({
           <Checkbox slider />
         </Table.Cell>
       ) : null}
-      <Table.Cell>{account.creditorName}</Table.Cell>
-      <Table.Cell>{account.balance}</Table.Cell>
-      <Table.Cell>{account.limit}</Table.Cell>
-      <Table.Cell>{account.availableCredit}</Table.Cell>
-      <Table.Cell>{account.accountRating}</Table.Cell>
-      <Table.Cell>{account.accountNumber}</Table.Cell>
-      <Table.Cell>
-        <Moment format="MM/DD/YYYY">{account.paymentDate}</Moment>
+      <Table.Cell textAlign="left">{account.creditorName}</Table.Cell>
+      <Table.Cell textAlign="right">
+        {usdFormater.format(account.balance)}
+      </Table.Cell>
+      <Table.Cell textAlign="right">
+        {usdFormater.format(account.limit)}
+      </Table.Cell>
+      <Table.Cell textAlign="right">
+        {usdFormater.format(account.availableCredit)}
+      </Table.Cell>
+      <Table.Cell textAlign="center">{account.accountRating}</Table.Cell>
+      <Table.Cell textAlign="right">{account.accountNumber}</Table.Cell>
+      <Table.Cell textAlign="right">
+        {paymentDate.isValid() ? paymentDate.format('MM/DD/YYYY') : ''}
       </Table.Cell>
     </Table.Row>
   );

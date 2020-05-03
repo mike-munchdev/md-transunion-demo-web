@@ -5,13 +5,39 @@ import { Form } from 'semantic-ui-react';
 import { stateOptions } from '../../utils/states';
 import { transUnionQuerySchema } from '../../validation/transUnionQuerySchema';
 import { ICustomer } from '../../graphql/models/customer';
+import { GET_ACCOUNT_INFORMATION_FROM_TRANSUNION } from '../../graphql/queries/accounts';
+import { IAccountsData } from '../../graphql/models/account';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { useToasts } from 'react-toast-notifications';
 
 export interface ITransUnionQueryFormProps {
   customer: ICustomer;
+  updateAccounts: (accounts: IAccountsData) => void;
+  setLoading: (isLoading: boolean) => void;
 }
 const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
   customer,
+  updateAccounts,
+  setLoading
 }) => {
+  const { addToast } = useToasts();
+  const [getAccountInformationFromTransUnion] = useLazyQuery(
+    GET_ACCOUNT_INFORMATION_FROM_TRANSUNION,
+    {
+      fetchPolicy: 'network-only',
+      onError: () => {
+        addToast(
+          'An error occurred retriving customer information. Please try again.',
+          { appearance: 'error' }
+        );
+      },
+      onCompleted: ({ getAccountInformationFromTransUnion }) => {
+        setLoading(false);
+        updateAccounts(getAccountInformationFromTransUnion);
+      },
+    }
+  );
+
   return (
     <Formik
       initialValues={{
@@ -25,10 +51,16 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
         city: customer.city || '',
         state: customer.state || '',
         zip: customer.zip || '',
+        customerId: customer.id,
       }}
       validationSchema={transUnionQuerySchema}
       onSubmit={async (values, { setSubmitting }) => {
+        setLoading(true);
         console.log('submitting with values', values);
+        getAccountInformationFromTransUnion({
+          variables: { input: { ...values } },
+        });
+        setSubmitting(false);
       }}
     >
       {(formikProps) => {
