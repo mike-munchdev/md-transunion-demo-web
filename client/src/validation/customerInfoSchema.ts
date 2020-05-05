@@ -8,5 +8,5 @@ export const customerInfoSchema = yup.object().shape({
   phoneNumber: yup.string().required('Phone Number is required'),
   city: yup.string().required('City is required'),
   state: yup.string().required('State is required'),
-  zip: yup.string().required('Zip Code is required'),
+  zipCode: yup.string().required('Zip Code is required'),
 });

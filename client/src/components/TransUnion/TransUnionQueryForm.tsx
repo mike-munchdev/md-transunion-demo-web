@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, FieldProps, Formik } from 'formik';
 import { TextInput, SelectInput } from '../FormFields';
 import { Form } from 'semantic-ui-react';
-import { stateOptions } from '../../utils/states';
+import { stateOptions, addressTypeOptions } from '../../utils/lookup';
 import { transUnionQuerySchema } from '../../validation/transUnionQuerySchema';
 import { ICustomer } from '../../graphql/models/customer';
 import { GET_ACCOUNT_INFORMATION_FROM_TRANSUNION } from '../../graphql/queries/accounts';
@@ -18,20 +18,22 @@ export interface ITransUnionQueryFormProps {
 const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
   customer,
   updateAccounts,
-  setLoading
+  setLoading,
 }) => {
   const { addToast } = useToasts();
   const [getAccountInformationFromTransUnion] = useLazyQuery(
     GET_ACCOUNT_INFORMATION_FROM_TRANSUNION,
     {
       fetchPolicy: 'network-only',
-      onError: () => {
+      onError: (e) => {
+        console.log(e)
         addToast(
           'An error occurred retriving customer information. Please try again.',
           { appearance: 'error' }
         );
       },
       onCompleted: ({ getAccountInformationFromTransUnion }) => {
+        
         setLoading(false);
         updateAccounts(getAccountInformationFromTransUnion);
       },
@@ -42,25 +44,29 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
     <Formik
       initialValues={{
         firstName: customer.firstName || '',
-        middleName: customer.middleName || '',
+        middleInit: customer.middleInit || '',
         lastName: customer.lastName || '',
         suffix: customer.suffix || '',
         ssn: customer.ssn || '',
-        address: customer.address || '',
-        address2: customer.address2 || '',
+        addressNumber: customer.addressNumber || '',
+        addressType: customer.addressType || '',
+        addressPostDirection: customer.addressPostDirection || '',
+        addressPreDirection: customer.addressPreDirection || '',
+        addressUnit: customer.addressUnit || '',
+        addressStreet: customer.addressStreet || '',
         city: customer.city || '',
         state: customer.state || '',
-        zip: customer.zip || '',
+        zipCode: customer.zipCode || '',
         customerId: customer.id,
       }}
       validationSchema={transUnionQuerySchema}
-      onSubmit={async (values, { setSubmitting }) => {
-        setLoading(true);
-        console.log('submitting with values', values);
+      onSubmit={(values, { setSubmitting }) => {
+        
+        // setLoading(true);
+
         getAccountInformationFromTransUnion({
           variables: { input: { ...values } },
         });
-        setSubmitting(false);
       }}
     >
       {(formikProps) => {
@@ -102,16 +108,41 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
               </Field>
             </Form.Group>
             <Form.Group widths="equal">
-              <Field name="address">
+              <Field name="addressNumber">
                 {(props: FieldProps) => (
-                  <TextInput label="address" fieldProps={props} />
+                  <TextInput label="address #" fieldProps={props} />
                 )}
               </Field>
-              <Field name="address2">
+              <Field name="addressPreDirection">
                 {(props: FieldProps) => (
-                  <TextInput label="address 2" fieldProps={props} />
+                  <TextInput label="address pre dir" fieldProps={props} />
                 )}
               </Field>
+              <Field name="addressStreet">
+                {(props: FieldProps) => (
+                  <TextInput label="street" fieldProps={props} />
+                )}
+              </Field>
+              <Field name="addressPostDirection">
+                {(props: FieldProps) => (
+                  <TextInput label="address post dir" fieldProps={props} />
+                )}
+              </Field>
+              <Field
+                label="addr type"
+                name="addressType"
+                component={SelectInput}
+                options={addressTypeOptions}
+                setValue={setFieldValue}
+                setTouched={setFieldTouched}
+              />
+              <Field name="addressUnit">
+                {(props: FieldProps) => (
+                  <TextInput label="unit" fieldProps={props} />
+                )}
+              </Field>
+            </Form.Group>
+            <Form.Group widths="equal">
               <Field name="city">
                 {(props: FieldProps) => (
                   <TextInput label="city" fieldProps={props} />
@@ -122,12 +153,11 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
                 label="state"
                 name="state"
                 component={SelectInput}
-                F
                 options={stateOptions}
                 setValue={setFieldValue}
                 setTouched={setFieldTouched}
               />
-              <Field name="zip">
+              <Field name="zipCode">
                 {(props: FieldProps) => (
                   <TextInput label="zip" fieldProps={props} />
                 )}
