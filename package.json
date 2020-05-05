@@ -1,0 +1,27 @@
+{
+  "name": "meredian-web",
+  "version": "1.0.0",
+  "description": "Meredian Front End React App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.20.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sheaman/meredian-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sheaman/meredian-web/issues"
+  },
+  "homepage": "https://github.com/sheaman/meredian-web#readme"
+}
