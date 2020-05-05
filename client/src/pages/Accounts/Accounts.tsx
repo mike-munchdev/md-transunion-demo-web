@@ -121,6 +121,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     a.currentBalance < Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE);
 
   const setLoading = (isLoading: boolean) => {
+    if (data) console.log('data');
     setIsLoading(isLoading);
   };
 
