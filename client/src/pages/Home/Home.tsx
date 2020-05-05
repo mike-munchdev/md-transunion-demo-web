@@ -29,7 +29,10 @@ const Home: React.FC = () => {
       },
       onCompleted: ({ getTokenByCodeAndPhoneNumber }) => {
         const { ok, token, errors } = getTokenByCodeAndPhoneNumber;
-
+        console.log(
+          'getTokenByCodeAndPhoneNumber',
+          getTokenByCodeAndPhoneNumber
+        );
         if (ok) {
           if (!token) {
             addToast('No customer found with the given information.', {

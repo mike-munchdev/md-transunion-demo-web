@@ -1,9 +1,9 @@
 import React from 'react';
-import { IAccount } from '../../graphql/models/account';
+import { IAccount, ITuAccount } from '../../graphql/models/account';
 import { Table, Checkbox } from 'semantic-ui-react';
 import moment from 'moment';
 export interface IAccountItemProps {
-  account?: IAccount;
+  account?: ITuAccount;
   rowSelectable: boolean;
 }
 
@@ -17,7 +17,7 @@ const AccountItem: React.FC<IAccountItemProps> = ({
     currency: 'USD',
   });
 
-  const paymentDate = moment(account.paymentDate);
+  const paymentDate = moment(account.mostRecentPayment.date);
   return (
     <Table.Row key={account.id}>
       {rowSelectable ? (
@@ -25,15 +25,15 @@ const AccountItem: React.FC<IAccountItemProps> = ({
           <Checkbox slider />
         </Table.Cell>
       ) : null}
-      <Table.Cell textAlign="left">{account.creditorName}</Table.Cell>
+      <Table.Cell textAlign="left">{account.subscriber.name.unparsed}</Table.Cell>
       <Table.Cell textAlign="right">
-        {usdFormater.format(account.balance)}
+        {usdFormater.format(account.currentBalance)}
       </Table.Cell>
       <Table.Cell textAlign="right">
-        {usdFormater.format(account.limit)}
+        {usdFormater.format(account.creditLimit)}
       </Table.Cell>
       <Table.Cell textAlign="right">
-        {usdFormater.format(account.availableCredit)}
+        {usdFormater.format(account.creditLimit - account.currentBalance)}
       </Table.Cell>
       <Table.Cell textAlign="center">{account.accountRating}</Table.Cell>
       <Table.Cell textAlign="right">{account.accountNumber}</Table.Cell>

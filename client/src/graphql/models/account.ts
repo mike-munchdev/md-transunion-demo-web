@@ -1,20 +1,33 @@
 import { IError } from './error';
 
+export interface IName {
+  unparsed: string;
+}
+export interface ISubscriber {
+  name: IName;
+}
+export interface IMostRecentPayment {
+  date: string;
+}
+export interface ITuAccount {
+  id: string;
+  subscriber: ISubscriber;
+  currentBalance: number;
+  creditLimit: number;
+  accountRating: string;
+  accountNumber: string;
+  mostRecentPayment: IMostRecentPayment;
+}
 export interface IAccount {
   id: string;
-  creditorName: string;
-  balance: number;
-  limit: number;
-  availableCredit: number;
-  accountRating: number;
-  accountNumber: string;
-  paymentDate: Date;
+  customerId: string;
+  tradeAccounts: [ITuAccount];
+  collectionAccounts: [ITuAccount];
 }
 
 export interface IAccountsData {
   ok: boolean;
-  validAccounts: IAccount[];
-  invalidAccounts: IAccount[];
+  accounts: IAccount;
   errors: IError[];
 }
 

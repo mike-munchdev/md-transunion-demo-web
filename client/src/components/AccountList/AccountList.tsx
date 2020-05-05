@@ -1,11 +1,11 @@
 import React from 'react';
 
 import AccountItem from './AccountItem';
-import { IAccount } from '../../graphql/models/account';
+import { IAccount, ITuAccount } from '../../graphql/models/account';
 import { Table } from 'semantic-ui-react';
 
 export interface IAccountListProps {
-  accounts: IAccount[];
+  accounts: ITuAccount[];
   rowsSelectable: boolean;
 }
 
@@ -29,7 +29,7 @@ const AccountList: React.FC<IAccountListProps> = ({
 
     <Table.Body>
       {accounts &&
-        accounts.map((account: IAccount) => (
+        accounts.map((account: ITuAccount) => (
           <AccountItem
             rowSelectable={rowsSelectable}
             account={account}

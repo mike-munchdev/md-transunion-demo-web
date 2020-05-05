@@ -1,21 +1,25 @@
 import gql from 'graphql-tag';
 
 const customersStructure = `{
-  id
-  code
-  email
-  firstName
-  middleName
-  lastName
-  suffix
-  phoneNumber
-  ssn
-  address
-  address2
-  city
-  state
-  zip
-  accountCount
+    id
+    firstName
+    middleInit
+    lastName
+    email
+    code
+    ssn
+    phoneNumber
+    addressType
+    addressUnit
+    addressNumber
+    addressType
+    addressPostDirection
+    addressPreDirection
+    addressStreet
+    city
+    state
+    zipCode
+    accountCount
   }`;
 
 export const GET_CUSTOMER_BY_ID = gql`

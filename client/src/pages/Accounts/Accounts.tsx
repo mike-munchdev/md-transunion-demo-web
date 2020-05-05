@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 
-import { IAccountsData, IAccount } from '../../graphql/models/account';
+import {
+  IAccountsData,
+  IAccount,
+  ITuAccount,
+} from '../../graphql/models/account';
 import AccountList from '../../components/AccountList/AccountList';
 import { GET_ACCOUNTS_FOR_CUSTOMER } from '../../graphql/queries/accounts';
 import { RouteComponentProps } from 'react-router-dom';
@@ -19,16 +23,17 @@ export interface IAccountRouteParams {
 }
 const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
   const [customer, setCustomer] = useState(null);
-  const [validAccounts, setOpenAccounts] = useState<IAccount[] | undefined>([]);
-  const [invalidAccounts, setClosedAccounts] = useState<IAccount[] | undefined>(
+  const [validAccounts, setValidAccounts] = useState<ITuAccount[] | undefined>(
     []
   );
+  const [invalidAccounts, setInvalidAccounts] = useState<
+    ITuAccount[] | undefined
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [
     closedAccountSegmentVisible,
     setClosedAccountSegmentVisible,
   ] = useState(false);
-  
 
   const { addToast } = useToasts();
 
@@ -40,20 +45,22 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
       variables: { customerId: customerInfo.id },
       onError: () => {
         setIsLoading(false);
-        addToast(
-          ERRORS.CUSTOMER.RETRIEVING_INFORMATION,
-          { appearance: 'error' }
-        );
+        addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, {
+          appearance: 'error',
+        });
       },
       onCompleted: ({ getAccountsForCustomer }) => {
+        console.log(
+          'getting accounts for customer completed',
+          getAccountsForCustomer
+        );
         if (getAccountsForCustomer.ok) {
-          setOpenAccounts(getAccountsForCustomer.validAccounts);
-          setClosedAccounts(getAccountsForCustomer.invalidAccounts);
+          setValidAccounts(getAccountsForCustomer.accounts.tradeAccounts);
+          setInvalidAccounts(getAccountsForCustomer.accounts.collectionAccounts);
         } else {
-          addToast(
-            ERRORS.ACCOUNT.RETRIEVING_INFORMATION,
-            { appearance: 'error' }
-          );
+          addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, {
+            appearance: 'error',
+          });
         }
         setIsLoading(false);
       },
@@ -68,15 +75,17 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     onError: (error) => {
       console.log('error', error);
       setIsLoading(false);
-      addToast(
-        ERRORS.CUSTOMER.RETRIEVING_INFORMATION,
-        { appearance: 'error' }
-      );
+      addToast(ERRORS.CUSTOMER.RETRIEVING_INFORMATION, { appearance: 'error' });
     },
-    onCompleted: ({ getCustomerById }) => {      
+    onCompleted: ({ getCustomerById }) => {
       if (getCustomerById.ok) {
         setCustomer(getCustomerById.customer);
+        console.log(
+          'getCustomerById.customer.accountCount ',
+          getCustomerById.customer.accountCount
+        );
         if (getCustomerById.customer.accountCount > 0) {
+          console.log('getting accounts for this customer');
           getAccountsForCustomer({
             variables: { customerId: customerInfo.id },
           });
@@ -84,25 +93,20 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
           setIsLoading(false);
         }
       } else {
-        addToast(
-          ERRORS.CUSTOMER.RETRIEVING_INFORMATION,
-          { appearance: 'error' }
-        );
+        addToast(ERRORS.CUSTOMER.RETRIEVING_INFORMATION, {
+          appearance: 'error',
+        });
         setIsLoading(false);
       }
     },
   });
-  
-  
-  const updateAccounts = (accounts: IAccountsData) => {
-    if (accounts.ok) {
-      setOpenAccounts(accounts.validAccounts);
-      setClosedAccounts(accounts.invalidAccounts);
+
+  const updateAccounts = (data: IAccountsData) => {
+    if (data.ok) {
+      setValidAccounts(data.accounts.tradeAccounts);
+      setInvalidAccounts(data.accounts.collectionAccounts);
     } else {
-      addToast(
-        ERRORS.ACCOUNT.RETRIEVING_INFORMATION,
-        { appearance: 'error' }
-      );
+      addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, { appearance: 'error' });
     }
     setIsLoading(false);
   };
@@ -113,10 +117,11 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
 
   if (isLoading) return <LoadingComponent />;
 
-  
+  console.log('validAccounts', validAccounts);
+  console.log('invalidAccounts', invalidAccounts);
   return (
     <div>
-      <Header as="h2" icon>        
+      <Header as="h2" icon>
         Account Information
       </Header>
       {validAccounts.length === 0 && invalidAccounts.length === 0 && (
