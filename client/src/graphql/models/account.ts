@@ -9,6 +9,9 @@ export interface ISubscriber {
 export interface IMostRecentPayment {
   date: string;
 }
+export interface IAccountType {
+  type: string;
+}
 export interface ITuAccount {
   id: string;
   subscriber: ISubscriber;
@@ -17,6 +20,7 @@ export interface ITuAccount {
   accountRating: string;
   accountNumber: string;
   mostRecentPayment: IMostRecentPayment;
+  account: IAccountType;
 }
 export interface IAccount {
   id: string;

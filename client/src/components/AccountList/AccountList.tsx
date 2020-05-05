@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AccountItem from './AccountItem';
-import { IAccount, ITuAccount } from '../../graphql/models/account';
+import { ITuAccount } from '../../graphql/models/account';
 import { Table } from 'semantic-ui-react';
 
 export interface IAccountListProps {
