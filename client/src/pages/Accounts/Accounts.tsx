@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 
-import {
-  IAccountsData,
-  IAccount,
-  ITuAccount,
-} from '../../graphql/models/account';
+import { IAccountsData, ITuAccount } from '../../graphql/models/account';
 import AccountList from '../../components/AccountList/AccountList';
 import { GET_ACCOUNTS_FOR_CUSTOMER } from '../../graphql/queries/accounts';
 import { RouteComponentProps } from 'react-router-dom';
@@ -50,13 +46,11 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
         });
       },
       onCompleted: ({ getAccountsForCustomer }) => {
-        console.log(
-          'getting accounts for customer completed',
-          getAccountsForCustomer
-        );
         if (getAccountsForCustomer.ok) {
           setValidAccounts(getAccountsForCustomer.accounts.tradeAccounts);
-          setInvalidAccounts(getAccountsForCustomer.accounts.collectionAccounts);
+          setInvalidAccounts(
+            getAccountsForCustomer.accounts.collectionAccounts
+          );
         } else {
           addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, {
             appearance: 'error',
@@ -80,12 +74,8 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     onCompleted: ({ getCustomerById }) => {
       if (getCustomerById.ok) {
         setCustomer(getCustomerById.customer);
-        console.log(
-          'getCustomerById.customer.accountCount ',
-          getCustomerById.customer.accountCount
-        );
+
         if (getCustomerById.customer.accountCount > 0) {
-          console.log('getting accounts for this customer');
           getAccountsForCustomer({
             variables: { customerId: customerInfo.id },
           });
@@ -103,13 +93,22 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
 
   const updateAccounts = (data: IAccountsData) => {
     if (data.ok) {
-      setValidAccounts(data.accounts.tradeAccounts);
-      setInvalidAccounts(data.accounts.collectionAccounts);
+      setValidAccounts(data.accounts.tradeAccounts.filter(validAccountFilter));
+      setInvalidAccounts(
+        data.accounts.collectionAccounts.filter(invalidAccountFilter)
+      );
     } else {
       addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, { appearance: 'error' });
     }
     setIsLoading(false);
   };
+
+  const validAccountFilter = (a: ITuAccount) =>
+    (a.account.type === 'CC' || a.account.type === 'CH') &&
+    a.currentBalance >= Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE);
+  const invalidAccountFilter = (a: ITuAccount) =>
+    (a.account.type === 'CC' || a.account.type === 'CH') &&
+    a.currentBalance < Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE);
 
   const setLoading = (isLoading: boolean) => {
     setIsLoading(isLoading);
@@ -117,8 +116,6 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
 
   if (isLoading) return <LoadingComponent />;
 
-  console.log('validAccounts', validAccounts);
-  console.log('invalidAccounts', invalidAccounts);
   return (
     <div>
       <Header as="h2" icon>
