@@ -12,12 +12,16 @@ const [httpLinkUri, wsLinkUri] = useServerInfo();
 const httpLink = new HttpLink({
   uri: `${httpLinkUri}/graphql`,
 });
+const token = localStorage.getItem('token');
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
   uri: `${wsLinkUri}/graphql`,
   options: {
     reconnect: true,
+    connectionParams: {
+      'x-auth': token,
+    },
   },
 });
 
