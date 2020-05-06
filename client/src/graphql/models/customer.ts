@@ -3,14 +3,19 @@ export interface ICustomer {
   code?: string;
   email?: string;
   firstName: string;
-  middleName?: string;
+  middleInit?: string;
   lastName: string;
   suffix?: string;
   phoneNumber: string;
   ssn: string;
-  address?: string;
-  address2?: string;
+  addressNumber?: string;
+  addressType?: string;
+  addressPostDirection?: string;
+  addressPreDirection?: string;
+  addressUnit?: string;
+  addressStreet?: string;
+
   city?: string;
   state?: string;
-  zip?: string;
+  zipCode?: string;
 }

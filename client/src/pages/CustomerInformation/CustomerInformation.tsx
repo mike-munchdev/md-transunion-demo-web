@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { IAccountRouteParams } from '../Accounts/Accounts';
 import { customerInfoSchema } from '../../validation/customerInfoSchema';
 import { TextInput, SelectInput } from '../../components/FormFields';
-import {stateOptions} from '../../utils/states';
+import { stateOptions } from '../../utils/lookup';
 import LoadingComponent from '../../components/Loading/Loading';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { useToasts } from 'react-toast-notifications';
@@ -84,7 +84,6 @@ const CustomerInformation: React.FC<RouteComponentProps<
           } = await callUpdateCustomer({
             variables: { input: { ...values, customerId: customerInfo.id } },
           });
-          
 
           if (updateCustomer.ok) {
             // redirect to accounts page

@@ -93,10 +93,20 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
 
   const updateAccounts = (data: IAccountsData) => {
     if (data.ok) {
-      setValidAccounts(data.accounts.tradeAccounts.filter(validAccountFilter));
-      setInvalidAccounts(
-        data.accounts.collectionAccounts.filter(invalidAccountFilter)
-      );
+      if (
+        data.accounts.tradeAccounts.length > 0 ||
+        data.accounts.collectionAccounts.length > 0
+      ) {
+        setValidAccounts(
+          data.accounts.tradeAccounts.filter(validAccountFilter)
+        );
+        setInvalidAccounts(
+          data.accounts.collectionAccounts.filter(invalidAccountFilter)
+        );
+      } else {
+        addToast(ERRORS.ACCOUNT.NO_ACCOUNTS_FOUND, { appearance: 'error' });
+       
+      }
     } else {
       addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, { appearance: 'error' });
     }
@@ -111,6 +121,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     a.currentBalance < Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE);
 
   const setLoading = (isLoading: boolean) => {
+    if (data) console.log('data');
     setIsLoading(isLoading);
   };
 

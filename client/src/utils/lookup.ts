@@ -165,3 +165,15 @@ export const states = [
   { code: 'WI', state: 'Wisconsin', numericCode: '55' },
   { code: 'WY', state: 'Wyoming', numericCode: '5' },
 ];
+
+export const stateOptions = states.map((s) => ({
+  key: s.numericCode,
+  text: s.state,
+  value: s.code,
+}));
+
+export const addressTypeOptions = addressCodes.map((a) => ({
+  key: a.code,
+  text: `${a.code} - ${a.streetType}`,
+  value: a.code,
+}));
