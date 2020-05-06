@@ -7,6 +7,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { setContext } from 'apollo-link-context';
 import { useServerInfo } from '../utils/serverInfo';
 const [httpLinkUri, wsLinkUri] = useServerInfo();
+
 // Create an http link:
 const httpLink = new HttpLink({
   uri: `${httpLinkUri}/graphql`,
