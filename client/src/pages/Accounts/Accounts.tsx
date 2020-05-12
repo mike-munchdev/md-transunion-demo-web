@@ -13,6 +13,7 @@ import { Accordion, Message, Segment, Header } from 'semantic-ui-react';
 import { TransUnionQueryForm } from '../../components/TransUnion';
 import { GET_CUSTOMER_BY_ID } from '../../graphql/queries/customers';
 import { ERRORS } from '../../constants/errors';
+import { accountRatings } from '../../utils/lookup';
 
 export interface IAccountRouteParams {
   code: string;
@@ -39,6 +40,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     GET_ACCOUNTS_FOR_CUSTOMER,
     {
       variables: { customerId: customerInfo.id },
+      fetchPolicy: 'network-only',
       onError: () => {
         setIsLoading(false);
         addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, {
@@ -46,10 +48,16 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
         });
       },
       onCompleted: ({ getAccountsForCustomer }) => {
-        if (getAccountsForCustomer.ok) {
-          setValidAccounts(getAccountsForCustomer.accounts.tradeAccounts);
+        if (getAccountsForCustomer.ok) {          
+          setValidAccounts(
+            getAccountsForCustomer.accounts.tradeAccounts.filter(
+              validAccountFilter
+            )
+          );
           setInvalidAccounts(
-            getAccountsForCustomer.accounts.collectionAccounts
+            [...getAccountsForCustomer.accounts.tradeAccounts, ...getAccountsForCustomer.accounts.collectionAccounts].filter(
+              invalidAccountFilter
+            )
           );
         } else {
           addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, {
@@ -101,11 +109,10 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
           data.accounts.tradeAccounts.filter(validAccountFilter)
         );
         setInvalidAccounts(
-          data.accounts.collectionAccounts.filter(invalidAccountFilter)
+          [...data.accounts.tradeAccounts, ...data.accounts.collectionAccounts].filter(invalidAccountFilter)
         );
       } else {
         addToast(ERRORS.ACCOUNT.NO_ACCOUNTS_FOUND, { appearance: 'error' });
-       
       }
     } else {
       addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, { appearance: 'error' });
@@ -113,12 +120,28 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     setIsLoading(false);
   };
 
-  const validAccountFilter = (a: ITuAccount) =>
-    (a.account.type === 'CC' || a.account.type === 'CH') &&
-    a.currentBalance >= Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE);
-  const invalidAccountFilter = (a: ITuAccount) =>
-    (a.account.type === 'CC' || a.account.type === 'CH') &&
-    a.currentBalance < Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE);
+  const validAccountFilter = (account: ITuAccount) => {    
+    const rating = accountRatings.find(
+      (r) => r.code === ('0' + account.accountRating).slice(-2)
+    );    
+    const valid = rating && rating.valid;
+    return (
+      (account.account.type === 'CC' || account.account.type === 'CH') &&
+      account.currentBalance >= Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE) && valid
+    );
+  };
+
+  const invalidAccountFilter = (account: ITuAccount) => {
+    const rating = accountRatings.find(
+      (r) => r.code === ('0' + account.accountRating).slice(-2)
+    );    
+    const valid = rating && rating.valid;
+
+    return (
+      (account.account.type === 'CC' || account.account.type === 'CH') &&
+      (account.currentBalance < Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE) || !valid)
+    );
+  };
 
   const setLoading = (isLoading: boolean) => {
     if (data) console.log('data');
@@ -182,7 +205,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
                 }
               >
                 <h3 style={{ display: 'flex' }}>
-                  <div style={{ marginRight: '20px' }}>Closed Accounts</div>
+                  <div style={{ marginRight: '20px' }}>Invalid Accounts</div>
                   <div style={{ fontWeight: 'normal' }}>[Show/Hide]</div>
                 </h3>
               </Accordion.Title>

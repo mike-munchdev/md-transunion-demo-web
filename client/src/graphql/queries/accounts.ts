@@ -12,6 +12,9 @@ const tuAccountStructure = `{
   creditLimit
   accountRating
   accountNumber
+  account {
+    type
+  }
   mostRecentPayment {
     
     date
