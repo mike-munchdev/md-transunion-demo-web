@@ -1,20 +1,25 @@
 export const accountRatings = [
-  { code: '01', description: 'Paid or paying as agreed' },
-  { code: '02', description: '30 days past due' },
-  { code: '03', description: '60 days past due' },
-  { code: '04', description: '90 days past due' },
-  { code: '05', description: '120 days past due' },
-  { code: '07', description: 'Wage earner or similar plan' },
-  { code: '08', description: 'Repossession' },
-  { code: '8A', description: 'Voluntary surrender' },
-  { code: '8P', description: 'Payment after repossession' },
-  { code: '09', description: 'Charged off as bad debt' },
-  { code: '9B', description: 'Collection account' },
-  { code: '9P', description: 'Payment after charge off/collection' },
+  { code: '01', description: 'Paid or paying as agreed', valid: true },
+  { code: '02', description: '30 days past due', valid: true },
+  { code: '03', description: '60 days past due', valid: false },
+  { code: '04', description: '90 days past due', valid: false },
+  { code: '05', description: '120 days past due', valid: false },
+  { code: '07', description: 'Wage earner or similar plan', valid: false },
+  { code: '08', description: 'Repossession', valid: false },
+  { code: '8A', description: 'Voluntary surrender', valid: false },
+  { code: '8P', description: 'Payment after repossession', valid: false },
+  { code: '09', description: 'Charged off as bad debt', valid: false },
+  { code: '9B', description: 'Collection account', valid: false },
+  {
+    code: '9P',
+    description: 'Payment after charge off/collection',
+    valid: false,
+  },
   {
     code: 'UR',
     description:
       'Unrated or bankruptcy (remark codes will show whether the account is a bankruptcy and, if so, what type of bankruptcy)',
+    valid: false,
   },
 ];
 export const addressCodes = [
@@ -73,6 +78,7 @@ export const addressCodes = [
   { code: 'GA', streetType: 'Garden' },
   { code: 'WY', streetType: 'Way' },
 ];
+
 export const provinces = [
   { code: 'AB', province: 'Alberta' },
   { code: 'BC', province: 'British Columbia' },
@@ -92,6 +98,7 @@ export const provinces = [
   { code: 'YU', province: 'Yukon' },
   { code: 'YT', province: 'Yukon' },
 ];
+
 export const locations = [
   { code: 'AA', location: 'Military address in America other than Canada' },
   {
