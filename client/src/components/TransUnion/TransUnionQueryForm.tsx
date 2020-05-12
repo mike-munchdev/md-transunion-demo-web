@@ -26,15 +26,13 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
     {
       fetchPolicy: 'network-only',
       onError: (e) => {
-        console.log(e)
+        console.log(e);
         addToast(
           'An error occurred retriving customer information. Please try again.',
           { appearance: 'error' }
         );
       },
       onCompleted: ({ getAccountInformationFromTransUnion }) => {
-        
-        setLoading(false);
         updateAccounts(getAccountInformationFromTransUnion);
       },
     }
@@ -61,12 +59,10 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
       }}
       validationSchema={transUnionQuerySchema}
       onSubmit={(values, { setSubmitting }) => {
-        
-        // setLoading(true);
-
         getAccountInformationFromTransUnion({
           variables: { input: { ...values } },
         });
+        setSubmitting(false);
       }}
     >
       {(formikProps) => {
