@@ -48,6 +48,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
         });
       },
       onCompleted: ({ getAccountsForCustomer }) => {
+        
         if (getAccountsForCustomer.ok) {          
           setValidAccounts(
             getAccountsForCustomer.accounts.tradeAccounts.filter(
@@ -80,6 +81,8 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
       addToast(ERRORS.CUSTOMER.RETRIEVING_INFORMATION, { appearance: 'error' });
     },
     onCompleted: ({ getCustomerById }) => {
+      if (data) console.log("");
+      
       if (getCustomerById.ok) {
         setCustomer(getCustomerById.customer);
 
@@ -142,12 +145,6 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
       (account.currentBalance < Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE) || !valid)
     );
   };
-
-  const setLoading = (isLoading: boolean) => {
-    if (data) console.log('data');
-    setIsLoading(isLoading);
-  };
-
   if (isLoading) return <LoadingComponent />;
 
   return (
@@ -171,7 +168,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
           <TransUnionQueryForm
             customer={customer}
             updateAccounts={updateAccounts}
-            setLoading={setLoading}
+            
           />
         </Segment>
       )}

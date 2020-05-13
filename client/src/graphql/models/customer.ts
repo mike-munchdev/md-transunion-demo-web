@@ -8,13 +8,8 @@ export interface ICustomer {
   suffix?: string;
   phoneNumber: string;
   ssn: string;
-  addressNumber?: string;
-  addressType?: string;
-  addressPostDirection?: string;
-  addressPreDirection?: string;
-  addressUnit?: string;
-  addressStreet?: string;
-
+  address?: string;
+  address2?: string;
   city?: string;
   state?: string;
   zipCode?: string;

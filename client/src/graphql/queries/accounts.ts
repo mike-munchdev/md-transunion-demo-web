@@ -15,8 +15,7 @@ const tuAccountStructure = `{
   account {
     type
   }
-  mostRecentPayment {
-    
+  mostRecentPayment {    
     date
   }
 }`;
