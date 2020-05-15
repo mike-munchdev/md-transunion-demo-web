@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Container, Header, Form } from 'semantic-ui-react';
+import { Segment, Container, Form, Image } from 'semantic-ui-react';
 import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
 import { Formik, Field, FieldProps } from 'formik';
 import { useToasts } from 'react-toast-notifications';
@@ -60,9 +60,9 @@ const Home: React.FC = () => {
   return (
     <Segment inverted textAlign="center" vertical className="masthead">
       <Container text>
-        <Header as="h1" inverted>
-          Meredian Credit Services
-        </Header>
+        <Container className="logo">
+          <Image src="logo.png" size="medium" />
+        </Container>
         <Container>
           <Formik
             initialValues={{
