@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 
 import { IAccountsData, ITuAccount } from '../../graphql/models/account';
 import AccountList from '../../components/AccountList/AccountList';
-import { GET_ACCOUNTS_FOR_CUSTOMER } from '../../graphql/queries/accounts';
+
 import { RouteComponentProps } from 'react-router-dom';
 
 import { useToasts } from 'react-toast-notifications';
@@ -35,41 +35,6 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
   const { addToast } = useToasts();
 
   const customerInfo = useCustomerInfo();
-
-  const [getAccountsForCustomer, { loading }] = useLazyQuery(
-    GET_ACCOUNTS_FOR_CUSTOMER,
-    {
-      variables: { customerId: customerInfo.id },
-      fetchPolicy: 'network-only',
-      onError: () => {
-        setIsLoading(false);
-        addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, {
-          appearance: 'error',
-        });
-      },
-      onCompleted: ({ getAccountsForCustomer }) => {
-        
-        if (getAccountsForCustomer.ok) {          
-          setValidAccounts(
-            getAccountsForCustomer.accounts.tradeAccounts.filter(
-              validAccountFilter
-            )
-          );
-          setInvalidAccounts(
-            [...getAccountsForCustomer.accounts.tradeAccounts, ...getAccountsForCustomer.accounts.collectionAccounts].filter(
-              invalidAccountFilter
-            )
-          );
-        } else {
-          addToast(ERRORS.ACCOUNT.RETRIEVING_INFORMATION, {
-            appearance: 'error',
-          });
-        }
-        setIsLoading(false);
-      },
-    }
-  );
-
   const { data } = useQuery(GET_CUSTOMER_BY_ID, {
     variables: {
       customerId: customerInfo.id,
@@ -81,18 +46,11 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
       addToast(ERRORS.CUSTOMER.RETRIEVING_INFORMATION, { appearance: 'error' });
     },
     onCompleted: ({ getCustomerById }) => {
-      if (data) console.log("");
-      
+      if (data) console.log('');
+
       if (getCustomerById.ok) {
         setCustomer(getCustomerById.customer);
-
-        if (getCustomerById.customer.accountCount > 0) {
-          getAccountsForCustomer({
-            variables: { customerId: customerInfo.id },
-          });
-        } else {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       } else {
         addToast(ERRORS.CUSTOMER.RETRIEVING_INFORMATION, {
           appearance: 'error',
@@ -112,7 +70,10 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
           data.accounts.tradeAccounts.filter(validAccountFilter)
         );
         setInvalidAccounts(
-          [...data.accounts.tradeAccounts, ...data.accounts.collectionAccounts].filter(invalidAccountFilter)
+          [
+            ...data.accounts.tradeAccounts,
+            ...data.accounts.collectionAccounts,
+          ].filter(invalidAccountFilter)
         );
       } else {
         addToast(ERRORS.ACCOUNT.NO_ACCOUNTS_FOUND, { appearance: 'error' });
@@ -123,26 +84,30 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     setIsLoading(false);
   };
 
-  const validAccountFilter = (account: ITuAccount) => {    
+  const validAccountFilter = (account: ITuAccount) => {
     const rating = accountRatings.find(
       (r) => r.code === ('0' + account.accountRating).slice(-2)
-    );    
+    );
     const valid = rating && rating.valid;
     return (
       (account.account.type === 'CC' || account.account.type === 'CH') &&
-      account.currentBalance >= Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE) && valid
+      account.currentBalance >=
+        Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE) &&
+      valid
     );
   };
 
   const invalidAccountFilter = (account: ITuAccount) => {
     const rating = accountRatings.find(
       (r) => r.code === ('0' + account.accountRating).slice(-2)
-    );    
+    );
     const valid = rating && rating.valid;
 
     return (
       (account.account.type === 'CC' || account.account.type === 'CH') &&
-      (account.currentBalance < Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE) || !valid)
+      (account.currentBalance <
+        Number(process.env.REACT_APP_MINIMUM_ACCOUNT_BALANCE) ||
+        !valid)
     );
   };
   if (isLoading) return <LoadingComponent />;
@@ -152,26 +117,23 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
       <Header as="h2" icon>
         Account Information
       </Header>
-      {validAccounts.length === 0 && invalidAccounts.length === 0 && (
-        <Segment>
-          <h3 style={{ display: 'flex' }}>
-            <div style={{ marginRight: '20px' }}>Query TransUnion</div>
-          </h3>
+      <Segment>
+        <h3 style={{ display: 'flex' }}>
+          <div style={{ marginRight: '20px' }}>Query TransUnion</div>
+        </h3>
 
-          <Message info>
-            <p>
-              {`Welcome ${customerInfo.displayName}, please provide the following information to securely
+        <Message info>
+          <p>
+            {`Welcome ${customerInfo.displayName}, please provide the following information to securely
           pull your creditor data from Transunion. This is soft pull and will
           not impact your credit score.`}
-            </p>
-          </Message>
-          <TransUnionQueryForm
-            customer={customer}
-            updateAccounts={updateAccounts}
-            
-          />
-        </Segment>
-      )}
+          </p>
+        </Message>
+        <TransUnionQueryForm
+          customer={customer}
+          updateAccounts={updateAccounts}
+        />
+      </Segment>
       {validAccounts.length > 0 && (
         <Segment>
           <h3>Valid Accounts</h3>
@@ -181,7 +143,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
             these you would like to enroll for an interest reduction.
           </Message>
 
-          {loading ? (
+          {isLoading ? (
             <p>Loading ...</p>
           ) : (
             <AccountList rowsSelectable={false} accounts={validAccounts} />
@@ -190,7 +152,7 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
       )}
       {invalidAccounts.length > 0 && (
         <Segment className="accounts-accordian">
-          {loading ? (
+          {isLoading ? (
             <p>Loading ...</p>
           ) : (
             <Accordion>

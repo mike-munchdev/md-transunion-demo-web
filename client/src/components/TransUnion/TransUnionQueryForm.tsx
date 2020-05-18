@@ -49,7 +49,7 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
         middleInit: customer.middleInit || '',
         lastName: customer.lastName || '',
         suffix: customer.suffix || '',
-        ssn: customer.ssn || '',
+        ssn: '',
         address: customer.address || '',
         address2: customer.address2 || '',
         city: customer.city || '',
