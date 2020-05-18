@@ -1,3 +1,8 @@
+:root {
+  --logo-height: 120px;
+  --logo-width: 275px;
+  --logo-header-ratio: 1.25;
+}
 .masthead {
   display: flex;
   align-items: center;
@@ -36,4 +41,25 @@
   align-items: center !important;
   justify-content: center !important;
   margin-bottom: 10px;
+}
+
+.menu-header {
+  background-color: #006685 !important;
+}
+
+.logo-header {
+  height: calc(var(--logo-height) / var(--logo-header-ratio)) !important;
+  width: calc(var(--logo-width) / var(--logo-header-ratio)) !important;
+}
+.logo-header img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.main-container {
+  margin-top: calc(var(--logo-height) / var(--logo-header-ratio) + 20px);
+}
+
+.ui.menu .item {
+  color: white !important;
 }
