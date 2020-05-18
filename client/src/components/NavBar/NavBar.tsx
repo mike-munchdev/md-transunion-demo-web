@@ -2,20 +2,24 @@ import React from 'react';
 import { Menu, Container, Dropdown } from 'semantic-ui-react';
 
 import { NavLink } from 'react-router-dom';
-import { useCustomerInfo, useLogout, useLoggedIn } from '../../utils/customerInfo';
+import {
+  useCustomerInfo,
+  useLogout,
+  useLoggedIn,
+} from '../../utils/customerInfo';
 
 const NavBar: React.FC = () => {
   const customerInfo = useCustomerInfo();
   const isLoggedIn = useLoggedIn();
-  
+
   const logout = useLogout();
   if (!isLoggedIn) return null;
-  
+
   return (
-    <Menu fixed="top" inverted>
+    <Menu fixed="top" className="menu-header">
       <Container>
-        <Menu.Item header as={NavLink} exact to="/">
-          Meredian Credit Services
+        <Menu.Item header as={NavLink} exact to="/" className="logo-header">
+          <img src="./header-logo.png" alt="TransUnion powered by Meredian" />
         </Menu.Item>
         {customerInfo && (
           <Menu.Item position="right">
