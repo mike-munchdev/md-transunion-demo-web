@@ -23,7 +23,7 @@ const Home: React.FC = () => {
       fetchPolicy: 'network-only',
       onError: (e: ApolloError) => {
         addToast(
-          'An error occurred retriving customer information. Please try again.',
+          'An error occurred retrieving customer information. Please try again.',
           { appearance: 'error' }
         );
       },
