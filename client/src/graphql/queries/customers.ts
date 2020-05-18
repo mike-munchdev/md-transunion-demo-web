@@ -9,6 +9,8 @@ const customersStructure = `{
     code
     ssn
     phoneNumber
+    address
+    address2
     addressType
     addressUnit
     addressNumber
