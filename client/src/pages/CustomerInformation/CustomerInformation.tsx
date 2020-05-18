@@ -35,7 +35,7 @@ const CustomerInformation: React.FC<RouteComponentProps<
       console.log('error', error);
       setIsLoading(false);
       addToast(
-        'An error occurred retriving customer information. Please try again.',
+        'An error occurred retrieving customer information. Please try again.',
         { appearance: 'error' }
       );
     },
@@ -45,7 +45,7 @@ const CustomerInformation: React.FC<RouteComponentProps<
         setCustomer(getCustomerById.customer);
       } else {
         addToast(
-          'An error occurred retriving customer information. Please try again.',
+          'An error occurred retrieving customer information. Please try again.',
           { appearance: 'error' }
         );
       }

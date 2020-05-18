@@ -29,7 +29,7 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
         setIsLoading(false);
         console.log(e);
         addToast(
-          'An error occurred retriving customer information. Please try again.',
+          'An error occurred retrieving customer information. Please try again.',
           { appearance: 'error' }
         );
       },
