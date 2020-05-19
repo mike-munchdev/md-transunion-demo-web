@@ -2,16 +2,12 @@
   --logo-height: 120px;
   --logo-width: 275px;
   --logo-header-ratio: 1.25;
+  --primary-blue: #006685;
 }
 .masthead {
   display: flex;
   align-items: center;
-  background-image: linear-gradient(
-    135deg,
-    rgb(24, 42, 115) 0%,
-    rgb(33, 138, 174) 69%,
-    rgb(32, 167, 172) 89%
-  ) !important;
+  background-color: white;
   height: 100vh;
 }
 .container-column {
@@ -44,7 +40,7 @@
 }
 
 .menu-header {
-  background-color: #006685 !important;
+  background-color: var(--primary-blue) !important;
 }
 
 .logo-header {
@@ -62,4 +58,7 @@
 
 .ui.menu .item {
   color: white !important;
+}
+.form-button-fixed-width button {
+  width: 90px;
 }

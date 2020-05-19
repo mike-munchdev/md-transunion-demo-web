@@ -58,7 +58,7 @@ const Home: React.FC = () => {
   );
 
   return (
-    <Segment inverted textAlign="center" vertical className="masthead">
+    <Segment textAlign="center" vertical className="masthead">
       <Container text>
         <Container className="logo">
           <Image src="logo.png" size="medium" />
@@ -111,11 +111,22 @@ const Home: React.FC = () => {
                       />
                     )}
                   </Field>
-                  <Form.Group inline>
-                    <Form.Button type="submit" primary disabled={isSubmitting}>
+                  <Form.Group widths="equal">
+                    <Form.Button
+                      
+                      type="submit"
+                      primary
+                      disabled={isSubmitting}
+                      className="form-button-fixed-width"
+                    >
                       Submit
                     </Form.Button>
-                    <Form.Button onClick={handleReset} disabled={isSubmitting}>
+                    <Form.Button
+                      
+                      onClick={handleReset}
+                      disabled={isSubmitting}
+                      className="form-button-fixed-width"
+                    >
                       Reset
                     </Form.Button>
                   </Form.Group>
