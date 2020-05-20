@@ -22,6 +22,8 @@ const customersStructure = `{
     state
     zipCode
     accountCount
+    accountNumber
+    routingNumber
   }`;
 
 export const GET_CUSTOMER_BY_ID = gql`

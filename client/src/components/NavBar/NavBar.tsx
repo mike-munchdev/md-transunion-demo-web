@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, Container, Dropdown } from 'semantic-ui-react';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import {
   useCustomerInfo,
   useLogout,
@@ -25,19 +25,19 @@ const NavBar: React.FC = () => {
           <Menu.Item position="right">
             <Dropdown pointing="top left" text={customerInfo.displayName}>
               <Dropdown.Menu>
-                {/* <Dropdown.Item
+                <Dropdown.Item
                   as={Link}
                   to={`/customer`}
-                  text="View Profile"
+                  text="View/Edit Information"
                   icon="user"
                 />
-
+                
                 <Dropdown.Item
                   as={Link}
                   to={`/accounts`}
                   text="View Accounts"
                   icon="money"
-                /> */}
+                />
                 <Dropdown.Item onClick={logout} text="Logout" icon="power" />
               </Dropdown.Menu>
             </Dropdown>

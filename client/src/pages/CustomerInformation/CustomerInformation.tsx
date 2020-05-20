@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { Message, Form } from 'semantic-ui-react';
+import { Form, Header, Divider } from 'semantic-ui-react';
 import { Field, Formik, FieldProps } from 'formik';
 import { RouteComponentProps } from 'react-router-dom';
 import { IAccountRouteParams } from '../Accounts/Accounts';
@@ -19,7 +19,7 @@ const CustomerInformation: React.FC<RouteComponentProps<
   IAccountRouteParams
 >> = ({ history }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [displayCustomer, setDisplayCustomer] = useState(null);
+
   const [customer, setCustomer] = useState(null);
   const { addToast } = useToasts();
   const [callUpdateCustomer] = useMutation(UPDATE_CUSTOMER);
@@ -40,8 +40,9 @@ const CustomerInformation: React.FC<RouteComponentProps<
       );
     },
     onCompleted: ({ getCustomerById }) => {
+      if (data) console.log('');
+      console.log('customer', getCustomerById);
       if (getCustomerById.ok) {
-        setDisplayCustomer(customerInfo);
         setCustomer(getCustomerById.customer);
       } else {
         addToast(
@@ -58,24 +59,23 @@ const CustomerInformation: React.FC<RouteComponentProps<
 
   return (
     <Fragment>
-      <Message info>
-        <p>
-          {`Welcome ${displayCustomer.displayName}, please provide the following information to securely
-          pull your creditor data from Transunion. This is soft pull and will
-          not impact your credit score…`}
-        </p>
-      </Message>
+      <Header as="h2" icon>
+        {`${customerInfo.displayName}`}
+      </Header>
       <Formik
         initialValues={{
           firstName: customer.firstName || '',
+          middleInit: customer.middleInit || '',
           lastName: customer.lastName || '',
           ssn: customer.ssn || '',
           address: customer.address || '',
           address2: customer.address2 || '',
           city: customer.city || '',
           state: customer.state || '',
-          zip: customer.zip || '',
+          zipCode: customer.zipCode || '',
           phoneNumber: customer.phoneNumber || '',
+          accountNumber: customer.accountNumber || '',
+          routingNumber: customer.routingNumber || '',
         }}
         validationSchema={customerInfoSchema}
         onSubmit={async (values) => {
@@ -87,7 +87,9 @@ const CustomerInformation: React.FC<RouteComponentProps<
 
           if (updateCustomer.ok) {
             // redirect to accounts page
-            history.push(`/accounts`);
+            addToast('Your information was saved successfully!', {
+              appearance: 'success',
+            });
           } else {
             addToast(
               'An error occurred saving customer information. Please try again.',
@@ -107,6 +109,7 @@ const CustomerInformation: React.FC<RouteComponentProps<
           } = formikProps;
           return (
             <Form onSubmit={handleSubmit}>
+              <Divider horizontal>Personal Information</Divider>
               <Form.Group widths={3}>
                 <Field name="firstName">
                   {(props: FieldProps) => (
@@ -118,22 +121,22 @@ const CustomerInformation: React.FC<RouteComponentProps<
                     />
                   )}
                 </Field>
+                <Field name="middleInit">
+                  {(props: FieldProps) => (
+                    <TextInput
+                      label="Middle Initial"
+                      fieldProps={props}
+                      placeholder="Middle Initial"
+                      width={5}
+                    />
+                  )}
+                </Field>
                 <Field name="lastName">
                   {(props: FieldProps) => (
                     <TextInput
                       label="Last Name"
                       fieldProps={props}
                       placeholder="Last Name"
-                      width={5}
-                    />
-                  )}
-                </Field>
-                <Field name="ssn">
-                  {(props: FieldProps) => (
-                    <TextInput
-                      label="Social Social Security Number"
-                      fieldProps={props}
-                      placeholder="Social Social Security Number"
                       width={5}
                     />
                   )}
@@ -192,7 +195,7 @@ const CustomerInformation: React.FC<RouteComponentProps<
                   setTouched={setFieldTouched}
                   label="State"
                 />
-                <Field name="zip">
+                <Field name="zipCode">
                   {(props: FieldProps) => (
                     <TextInput
                       label="Zip Code"
@@ -203,7 +206,28 @@ const CustomerInformation: React.FC<RouteComponentProps<
                   )}
                 </Field>
               </Form.Group>
-
+              <br />
+              <Divider horizontal>Bank Information</Divider>
+              <Form.Group widths={2}>
+                <Field name="routingNumber">
+                  {(props: FieldProps) => (
+                    <TextInput
+                      label="Routing Number"
+                      fieldProps={props}
+                      placeholder="Routing Number"
+                    />
+                  )}
+                </Field>
+                <Field name="accountNumber">
+                  {(props: FieldProps) => (
+                    <TextInput
+                      label="Account Number"
+                      fieldProps={props}
+                      placeholder="Account Number"
+                    />
+                  )}
+                </Field>
+              </Form.Group>
               <Form.Group inline>
                 <Form.Button
                   primary
