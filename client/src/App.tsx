@@ -16,6 +16,7 @@ import PrivateRoute from './layout/PrivateRoute';
 import { NavBar } from './components/NavBar';
 import { Container } from 'semantic-ui-react';
 import NotFound from './layout/NotFound';
+import { CustomerInformation } from './pages/CustomerInformation';
 
 const App: React.FC<RouteComponentProps> = () => {
   return (
@@ -31,11 +32,11 @@ const App: React.FC<RouteComponentProps> = () => {
               <NavBar />
               <Container className="main-container">
                 <Switch>
-                  {/* <PrivateRoute
+                  <PrivateRoute
                     exact
                     path="/customer"
                     component={CustomerInformation}
-                  /> */}
+                  />
                   <PrivateRoute exact path="/accounts" component={Accounts} />
 
                   <Route component={NotFound} />
