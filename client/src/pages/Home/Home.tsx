@@ -3,20 +3,24 @@ import { Segment, Container, Form, Image } from 'semantic-ui-react';
 import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
 import { Formik, Field, FieldProps } from 'formik';
 import { useToasts } from 'react-toast-notifications';
-
+import { useLocation, Redirect } from 'react-router-dom';
+import { ApolloError } from 'apollo-client';
+import get from 'lodash/get';
 import { homeSchema } from '../../validation/homeSchema';
 import { GET_TOKEN_BY_CODE_AND_PHONE_NUMBER } from '../../graphql/queries/tokens';
-import { useHistory } from 'react-router-dom';
+
 import { TextInput } from '../../components/FormFields';
 import { IError } from '../../graphql/models/error';
-import { ApolloError } from 'apollo-client';
 
 import { FormErrorList } from '../../components/Errors';
+import { useLoggedIn } from '../../utils/customerInfo';
 
 const Home: React.FC = () => {
   const { addToast } = useToasts();
-  const client = useApolloClient();
-  let history = useHistory();
+  const client = useApolloClient();  
+  let location = useLocation();
+  const isLoggedIn = useLoggedIn();
+
   const [getTokenByCodeAndPhoneNumber, { loading }] = useLazyQuery(
     GET_TOKEN_BY_CODE_AND_PHONE_NUMBER,
     {
@@ -45,8 +49,6 @@ const Home: React.FC = () => {
                 token,
               },
             });
-
-            history.push(`/accounts`);
           }
         } else {
           errors.forEach((e: IError) => {
@@ -57,6 +59,14 @@ const Home: React.FC = () => {
     }
   );
 
+  if (isLoggedIn) {
+    const from = get(location, 'state.from.pathname', '/');
+    return (
+      <Redirect
+        to={from === '/' || from === '/user/login' ? '/accounts' : from}
+      />
+    );
+  }
   return (
     <Segment textAlign="center" vertical className="masthead">
       <Container text>
@@ -113,7 +123,6 @@ const Home: React.FC = () => {
                   </Field>
                   <Form.Group widths="equal">
                     <Form.Button
-                      
                       type="submit"
                       primary
                       disabled={isSubmitting}
@@ -122,7 +131,6 @@ const Home: React.FC = () => {
                       Submit
                     </Form.Button>
                     <Form.Button
-                      
                       onClick={handleReset}
                       disabled={isSubmitting}
                       className="form-button-fixed-width"
