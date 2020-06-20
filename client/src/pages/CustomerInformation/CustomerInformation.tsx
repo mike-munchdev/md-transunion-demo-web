@@ -41,7 +41,7 @@ const CustomerInformation: React.FC<RouteComponentProps<
     },
     onCompleted: ({ getCustomerById }) => {
       if (data) console.log('');
-      console.log('customer', getCustomerById);
+
       if (getCustomerById.ok) {
         setCustomer(getCustomerById.customer);
       } else {

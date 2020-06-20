@@ -40,16 +40,18 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
     }
   );
 
+  
   if (isLoading) return <LoadingComponent />;
 
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={{
         firstName: customer.firstName || '',
         middleInit: customer.middleInit || '',
         lastName: customer.lastName || '',
         suffix: customer.suffix || '',
-        ssn: customer.ssn,
+        ssn: customer.ssn || '',
         address: customer.address || '',
         address2: customer.address2 || '',
         city: customer.city || '',
