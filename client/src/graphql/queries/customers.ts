@@ -5,6 +5,7 @@ const customersStructure = `{
     firstName
     middleInit
     lastName
+    suffix
     email
     code
     ssn

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useState, useEffect } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 import { IAccountsData, ITuAccount } from '../../graphql/models/account';
 import AccountList from '../../components/AccountList/AccountList';
@@ -35,19 +35,13 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
   const { addToast } = useToasts();
 
   const customerInfo = useCustomerInfo();
-  const { data } = useQuery(GET_CUSTOMER_BY_ID, {
-    variables: {
-      customerId: customerInfo.id,
-    },
+  const [getCustomerById] = useLazyQuery(GET_CUSTOMER_BY_ID, {
     fetchPolicy: 'network-only',
     onError: (error) => {
-      console.log('error', error);
       setIsLoading(false);
       addToast(ERRORS.CUSTOMER.RETRIEVING_INFORMATION, { appearance: 'error' });
     },
     onCompleted: ({ getCustomerById }) => {
-      if (data) console.log('');
-
       if (getCustomerById.ok) {
         setCustomer(getCustomerById.customer);
         setIsLoading(false);
@@ -60,12 +54,25 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
     },
   });
 
+  useEffect(() => {
+    getCustomerById({
+      variables: {
+        customerId: customerInfo.id,
+      },
+    });
+  }, [customerInfo.id, getCustomerById]);
+
   const updateAccounts = (data: IAccountsData) => {
     if (data.ok) {
       if (
         data.accounts.tradeAccounts.length > 0 ||
         data.accounts.collectionAccounts.length > 0
       ) {
+        getCustomerById({
+          variables: {
+            customerId: customerInfo.id,
+          },
+        });
         setValidAccounts(
           data.accounts.tradeAccounts.filter(validAccountFilter)
         );
@@ -76,6 +83,11 @@ const Accounts: React.FC<RouteComponentProps<IAccountRouteParams>> = () => {
           ].filter(invalidAccountFilter)
         );
       } else {
+        getCustomerById({
+          variables: {
+            customerId: customerInfo.id,
+          },
+        });
         addToast(ERRORS.ACCOUNT.NO_ACCOUNTS_FOUND, { appearance: 'error' });
       }
     } else {
