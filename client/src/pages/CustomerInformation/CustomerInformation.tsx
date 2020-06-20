@@ -117,7 +117,6 @@ const CustomerInformation: React.FC<RouteComponentProps<
                       label="First Name"
                       fieldProps={props}
                       placeholder="First Name"
-                      width={5}
                     />
                   )}
                 </Field>
@@ -127,7 +126,6 @@ const CustomerInformation: React.FC<RouteComponentProps<
                       label="Middle Initial"
                       fieldProps={props}
                       placeholder="Middle Initial"
-                      width={5}
                     />
                   )}
                 </Field>
@@ -137,7 +135,6 @@ const CustomerInformation: React.FC<RouteComponentProps<
                       label="Last Name"
                       fieldProps={props}
                       placeholder="Last Name"
-                      width={5}
                     />
                   )}
                 </Field>
@@ -149,7 +146,6 @@ const CustomerInformation: React.FC<RouteComponentProps<
                       label="Address"
                       fieldProps={props}
                       placeholder="Address"
-                      width={5}
                     />
                   )}
                 </Field>
@@ -159,7 +155,6 @@ const CustomerInformation: React.FC<RouteComponentProps<
                       label="Address 2"
                       fieldProps={props}
                       placeholder="Address 2"
-                      width={5}
                     />
                   )}
                 </Field>
@@ -169,27 +164,15 @@ const CustomerInformation: React.FC<RouteComponentProps<
                       label="City"
                       fieldProps={props}
                       placeholder="City"
-                      width={5}
                     />
                   )}
                 </Field>
               </Form.Group>
-              <Form.Group widths={3}>
-                <Field name="phoneNumber">
-                  {(props: FieldProps) => (
-                    <TextInput
-                      label="Phone Number"
-                      fieldProps={props}
-                      placeholder="Phone Number"
-                      width={5}
-                    />
-                  )}
-                </Field>
+              <Form.Group widths={4}>
                 <Field
                   name="state"
                   placeholder="State"
                   component={SelectInput}
-                  width={5}
                   options={stateOptions}
                   setValue={setFieldValue}
                   setTouched={setFieldTouched}
@@ -201,8 +184,21 @@ const CustomerInformation: React.FC<RouteComponentProps<
                       label="Zip Code"
                       fieldProps={props}
                       placeholder="Zip Code"
-                      width={5}
                     />
+                  )}
+                </Field>
+                <Field name="phoneNumber">
+                  {(props: FieldProps) => (
+                    <TextInput
+                      label="Phone Number"
+                      fieldProps={props}
+                      placeholder="Phone Number"
+                    />
+                  )}
+                </Field>
+                <Field name="ssn">
+                  {(props: FieldProps) => (
+                    <TextInput label="ssn" fieldProps={props} />
                   )}
                 </Field>
               </Form.Group>
