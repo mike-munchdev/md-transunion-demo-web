@@ -1,5 +1,11 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  Redirect,
+  useLocation,
+  useHistory,
+} from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
 import {
@@ -72,6 +78,7 @@ const steps: IStep[] = [
 const Questionnaire = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const location = useLocation();
+  const history = useHistory();
   const { addToast } = useToasts();
 
   useEffect(() => {
@@ -86,7 +93,14 @@ const Questionnaire = () => {
 
   const renderStep = (s: IStep) => {
     return (
-      <Step key={s.slug} active={steps[currentStepIndex].slug === s.slug}>
+      <Step
+        link
+        onClick={() => {
+          history.push(`/questionnaire/${s.slug}`);
+        }}
+        key={s.slug}
+        active={steps[currentStepIndex].slug === s.slug}
+      >
         <Step.Content>
           <Step.Title>{s.title}</Step.Title>
         </Step.Content>
@@ -126,7 +140,7 @@ const Questionnaire = () => {
         }}
       >
         <Form>
-          <Step.Group ordered attached="top" size="tiny" widths={8}>
+          <Step.Group lin ordered attached="top" size="tiny" widths={8}>
             {steps.map((s) => renderStep(s))}
           </Step.Group>
           <Switch>

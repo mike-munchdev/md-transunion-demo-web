@@ -62,3 +62,7 @@
 .form-button-fixed-width button {
   width: 90px;
 }
+
+.mt-1 {
+  margin-top: 1em !important;
+}
