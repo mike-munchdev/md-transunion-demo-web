@@ -8,6 +8,7 @@ interface ITextInputProps {
   placeholder?: string;
   width?: SemanticWIDTHS;
   label?: string;
+  iconName?: string;
 }
 
 const TextInput: React.FC<ITextInputProps> = ({
@@ -15,11 +16,14 @@ const TextInput: React.FC<ITextInputProps> = ({
   placeholder,
   label,
   fieldProps: { form, field },
+  iconName,
 }) => {
   return (
     <Form.Input
+      icon={iconName || null}
+      iconPosition={iconName ? 'left' : null}
       label={label}
-      width={width}
+      width={width || null}
       {...field}
       fluid
       type="text"

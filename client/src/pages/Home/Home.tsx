@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Container, Form, Image } from 'semantic-ui-react';
+import { Container, Form, Image, Grid } from 'semantic-ui-react';
 import { useApolloClient, useLazyQuery } from '@apollo/react-hooks';
 import { Formik, Field, FieldProps } from 'formik';
 import { useToasts } from 'react-toast-notifications';
@@ -17,7 +17,7 @@ import { useLoggedIn } from '../../utils/customerInfo';
 
 const Home: React.FC = () => {
   const { addToast } = useToasts();
-  const client = useApolloClient();  
+  const client = useApolloClient();
   let location = useLocation();
   const isLoggedIn = useLoggedIn();
 
@@ -68,84 +68,87 @@ const Home: React.FC = () => {
     );
   }
   return (
-    <Segment textAlign="center" vertical className="masthead">
-      <Container text>
+    <Grid
+      textAlign="center"
+      style={{ height: '100vh' }}
+      verticalAlign="middle"
+      container
+    >
+      <Grid.Column style={{ maxWidth: 450 }}>
         <Container className="logo">
-          <Image src="logo.png" size="medium" />
+          <Image src="/logo.png" size="medium" />
         </Container>
-        <Container>
-          <Formik
-            initialValues={{
-              code: '',
-              phoneNumber: '',
-            }}
-            validationSchema={homeSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              const { phoneNumber, code } = values;
-              getTokenByCodeAndPhoneNumber({
-                variables: { code, phoneNumber },
-              });
-              setSubmitting(false);
-            }}
-          >
-            {(formikProps) => {
-              const {
-                handleSubmit,
-                handleReset,
-                isSubmitting,
-                errors,
-                touched,
-              } = formikProps;
+        <Formik
+          initialValues={{
+            code: '',
+            phoneNumber: '',
+          }}
+          validationSchema={homeSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            const { phoneNumber, code } = values;
+            getTokenByCodeAndPhoneNumber({
+              variables: { code, phoneNumber },
+            });
+            setSubmitting(false);
+          }}
+        >
+          {(formikProps) => {
+            const {
+              handleSubmit,
+              handleReset,
+              isSubmitting,
+              errors,
+              touched,
+            } = formikProps;
 
-              return (
-                <Form
-                  onSubmit={handleSubmit}
-                  loading={loading}
-                  className="home-form"
+            return (
+              <Form size="large" onSubmit={handleSubmit} loading={loading}>
+                <Field name="code">
+                  {(props: FieldProps) => (
+                    <TextInput
+                      fieldProps={props}
+                      placeholder="Enter code"
+                      iconName="user secret"
+                    />
+                  )}
+                </Field>
+                <Field name="phoneNumber">
+                  {(props: FieldProps) => (
+                    <TextInput
+                      fieldProps={props}
+                      placeholder="Enter phone number"
+                      iconName="phone"
+                    />
+                  )}
+                </Field>
+
+                <Form.Button
+                  type="submit"
+                  fluid
+                  size="large"
+                  primary
+                  disabled={isSubmitting}
+                  className="form-button-fixed-width"
                 >
-                  <Field name="code">
-                    {(props: FieldProps) => (
-                      <TextInput
-                        fieldProps={props}
-                        placeholder="Enter code"
-                        width={6}
-                      />
-                    )}
-                  </Field>
-                  <Field name="phoneNumber">
-                    {(props: FieldProps) => (
-                      <TextInput
-                        fieldProps={props}
-                        placeholder="Enter phone number"
-                        width={6}
-                      />
-                    )}
-                  </Field>
-                  <Form.Group widths="equal">
-                    <Form.Button
-                      type="submit"
-                      primary
-                      disabled={isSubmitting}
-                      className="form-button-fixed-width"
-                    >
-                      Submit
-                    </Form.Button>
-                    <Form.Button
-                      onClick={handleReset}
-                      disabled={isSubmitting}
-                      className="form-button-fixed-width"
-                    >
-                      Reset
-                    </Form.Button>
-                  </Form.Group>
-                  <FormErrorList errors={errors} touched={touched} />
-                </Form>
-              );
-            }}
-          </Formik>
-        </Container>
-      </Container>
-    </Segment>
+                  Submit
+                </Form.Button>
+                <Form.Button
+                  fluid
+                  size="large"
+                  onClick={handleReset}
+                  disabled={isSubmitting}
+                  className="form-button-fixed-width"
+                >
+                  Reset
+                </Form.Button>
+
+                <FormErrorList errors={errors} touched={touched} />
+              </Form>
+            );
+          }}
+        </Formik>
+      </Grid.Column>
+    </Grid>
   );
 };
 
