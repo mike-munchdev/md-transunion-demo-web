@@ -21,7 +21,8 @@ const Welcome: FC<IQuestionnaireStepsProps> = ({
   console.log('values.applicant.state', values.applicant.state);
 
   const isStepInvalid = () => {
-    return !!!values.applicant.state;
+    return false;
+    // return !!!values.applicant.state;
   };
 
   return (

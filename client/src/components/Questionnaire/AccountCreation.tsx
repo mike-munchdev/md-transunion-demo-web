@@ -19,11 +19,12 @@ const AccountCreation: FC<IQuestionnaireStepsProps> = ({
   const { values } = formikProps;
 
   const isStepInvalid = () => {
-    return (
-      !!!values.applicant.email ||
-      !!!values.applicant.primaryPhoneNumber ||
-      !!!values.applicant.primaryPhoneNumberConfirm
-    );
+    return false;
+    // return (
+    //   !!!values.applicant.email ||
+    //   !!!values.applicant.primaryPhoneNumber ||
+    //   !!!values.applicant.primaryPhoneNumberConfirm
+    // );
   };
 
   return (
