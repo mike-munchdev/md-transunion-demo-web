@@ -8,7 +8,7 @@ import {
 } from 'semantic-ui-react';
 
 interface ISelectInputProps extends FormSelectProps {
-  width: SemanticWIDTHS;
+  width?: SemanticWIDTHS;
   label?: string;
   options: DropdownItemProps[];
   setValue: (field: string, value: any, shouldValidate?: boolean) => void;
@@ -32,9 +32,10 @@ const SelectInput: React.FC<ISelectInputProps> = (props) => {
 
   return (
     <Form.Select
+      fluid
       search
       width={width}
-      label={label || null}
+      label={label}
       id={field.name}
       name={field.name}
       onBlur={() => {

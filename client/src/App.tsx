@@ -39,7 +39,7 @@ const App: React.FC<RouteComponentProps> = () => {
                     component={CustomerInformation}
                   />
                   <PrivateRoute exact path="/accounts" component={Accounts} />
-                  <PrivateRoute
+                  <Route
                     exact
                     path="/questionnaire/:step"
                     component={Questionnaire}

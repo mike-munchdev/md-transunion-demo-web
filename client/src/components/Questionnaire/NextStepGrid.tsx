@@ -6,18 +6,25 @@ interface INextStepProps {
   handlePreviousClick?: Function;
   submit?: boolean;
   isFirstStep?: boolean;
+  nextStepButtonText?: string;
+  nextStepDisabled?: boolean;
+  prevStepDisabled?: boolean;
 }
 const NextStepGrid: FC<INextStepProps> = ({
   handleNextClick,
   handlePreviousClick,
   isFirstStep,
   submit,
+  nextStepButtonText,
+  nextStepDisabled,
+  prevStepDisabled,
 }) => {
   return (
     <Grid className="mt-1">
       <Grid.Column floated="left" width={5}>
         {isFirstStep ? null : (
           <Form.Button
+            disabled={prevStepDisabled}
             type="button"
             onClick={() => {
               if (handlePreviousClick) handlePreviousClick();
@@ -29,14 +36,17 @@ const NextStepGrid: FC<INextStepProps> = ({
       </Grid.Column>
       <Grid.Column floated="right" textAlign="right" width={5}>
         {submit ? (
-          <Form.Button type="submit">Submit</Form.Button>
+          <Form.Button disabled={nextStepDisabled} type="submit">
+            Submit
+          </Form.Button>
         ) : (
           <Form.Button
+            disabled={nextStepDisabled}
             onClick={() => {
               if (handleNextClick) handleNextClick();
             }}
           >
-            Next Step
+            {nextStepButtonText || 'Next Step'}
           </Form.Button>
         )}
       </Grid.Column>

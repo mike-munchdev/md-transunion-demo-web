@@ -1,29 +1,54 @@
 import React, { FC } from 'react';
 
+import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps } from '.';
 
-import Content from './Content';
-import { useHistory } from 'react-router-dom';
+import NextStepGrid from './NextStepGrid';
+import { Segment, Header } from 'semantic-ui-react';
+import CalculationsTable from './CalculationsTable';
 
-const Confirm: FC<IQuestionnaireStepsProps> = ({
+const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
   currentStepIndex,
   steps,
   setCurrentStepIndex,
+  formikProps,
 }) => {
   const history = useHistory();
+
+  const { values } = formikProps;
+  const { creditors } = values;
+  const isStepInvalid = () => {
+    return false;
+  };
+
   return (
-    <Content
-      title={
-        currentStepIndex >= 0 ? steps[currentStepIndex].title.toUpperCase() : ''
-      }
-      isFirstStep={currentStepIndex === 0}
-      submit
-      handlePreviousClick={() => {
-        history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
-        setCurrentStepIndex(currentStepIndex - 1);
-      }}
-    />
+    <Segment attached>
+      <Header size="medium">
+        {currentStepIndex >= 0
+          ? steps[currentStepIndex].title.toUpperCase()
+          : ''}
+      </Header>
+      <p>
+        <strong>View All Information and Submit</strong>
+      </p>
+
+      <NextStepGrid
+        submit={currentStepIndex === steps.length - 1}
+        isFirstStep={currentStepIndex === 0}
+        handleNextClick={() => {
+          history.push(`/questionnaire/${steps[currentStepIndex + 1].slug}`);
+          setCurrentStepIndex(currentStepIndex + 1);
+        }}
+        handlePreviousClick={() => {
+          history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
+          setCurrentStepIndex(currentStepIndex - 1);
+        }}
+        nextStepButtonText="Save &amp; Continue"
+        nextStepDisabled={isStepInvalid()}
+      />
+      <CalculationsTable creditors={creditors} />
+    </Segment>
   );
 };
 
-export default Confirm;
+export default PersonalInformation;
