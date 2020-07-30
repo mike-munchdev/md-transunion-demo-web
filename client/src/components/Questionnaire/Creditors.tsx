@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps, ICreditor } from '.';
 
-import NextStepGrid from './NextStepGrid';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 import { Segment, Header, Button, Table, Icon, Grid } from 'semantic-ui-react';
 import CreditorModal from './CreditorModal';
 import { creditorOptions } from '../../utils/lookup';
@@ -145,7 +145,7 @@ const Creditors: FC<IQuestionnaireStepsProps> = ({
           </Table.Body>
         </Table>
       ) : null}
-      <NextStepGrid
+      <QuestionnaireNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

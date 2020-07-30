@@ -1,38 +1,42 @@
 import React, { FC } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireStepsProps } from '.';
+import { IQuestionnaireProps } from '.';
 
-import NextStepGrid from './NextStepGrid';
-import { Segment, Header, Form } from 'semantic-ui-react';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import {
+  Segment,
+  Header,
+  Form,
+  Image,
+  Grid,
+  Container,
+  Button,
+} from 'semantic-ui-react';
 import { stateOptions } from '../../utils/lookup';
 import { Field } from 'formik';
 import { SelectInput } from '../FormFields';
 
-const Welcome: FC<IQuestionnaireStepsProps> = ({
-  currentStepIndex,
-  steps,
-  setCurrentStepIndex,
-  formikProps,
-}) => {
+const Welcome: FC<IQuestionnaireProps> = ({ formikProps }) => {
   const history = useHistory();
 
   const { setFieldValue, setFieldTouched, values } = formikProps;
   console.log('values.applicant.state', values.applicant.state);
 
   const isStepInvalid = () => {
-    return false;
-    // return !!!values.applicant.state;
+    // return false;
+    return !!!values.applicant.state;
   };
 
   return (
-    <Segment attached>
-      <Header size="medium">
-        {currentStepIndex >= 0
-          ? steps[currentStepIndex].title.toUpperCase()
-          : ''}
-      </Header>
-
+    <Container text>
+      <Grid
+        textAlign="center"
+        style={{ marginBottom: '10px' }}
+        verticalAlign="middle"
+      >
+        <Image src="/logo.png" size="large" />
+      </Grid>
       <p>
         Welcome to Meredian's
         <strong> Free Debt Management Quote Tool. </strong>
@@ -82,9 +86,9 @@ const Welcome: FC<IQuestionnaireStepsProps> = ({
         much time and money you will save in our program!
       </p>
       <Form>
-        <Form.Group widths={3}>
+        <Form.Group>
           <Field
-            name="state"
+            name="applicant.state"
             placeholder="State"
             component={SelectInput}
             options={stateOptions}
@@ -92,27 +96,20 @@ const Welcome: FC<IQuestionnaireStepsProps> = ({
             setTouched={setFieldTouched}
             label="Lets start with
               what state do you reside in:"
-            width={4}
             fluid
           />
         </Form.Group>
+        <Button
+          fluid
+          disabled={isStepInvalid()}
+          onClick={() => {
+            history.push(`/debtrelief/accountcreation`);
+          }}
+        >
+          Start New Debt Comparison
+        </Button>
       </Form>
-
-      <NextStepGrid
-        submit={currentStepIndex === steps.length - 1}
-        isFirstStep={currentStepIndex === 0}
-        handleNextClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex + 1].slug}`);
-          setCurrentStepIndex(currentStepIndex + 1);
-        }}
-        handlePreviousClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
-          setCurrentStepIndex(currentStepIndex - 1);
-        }}
-        nextStepButtonText="Start New Debt Comparison"
-        nextStepDisabled={isStepInvalid()}
-      />
-    </Segment>
+    </Container>
   );
 };
 

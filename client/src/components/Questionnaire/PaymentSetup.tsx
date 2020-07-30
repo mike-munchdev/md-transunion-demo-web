@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps } from '.';
 
-import NextStepGrid from './NextStepGrid';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 import { Segment, Header, Message, Form, Grid, Image } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput, SelectInput } from '../FormFields';
@@ -166,7 +166,7 @@ const PaymentSetup: FC<IQuestionnaireStepsProps> = ({
           </Grid.Row>
         </Grid>
       </Form>
-      <NextStepGrid
+      <QuestionnaireNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

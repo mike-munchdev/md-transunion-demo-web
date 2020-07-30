@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps } from '.';
 
-import NextStepGrid from './NextStepGrid';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 import { Segment, Header } from 'semantic-ui-react';
 import CalculationsTable from './CalculationsTable';
 
@@ -32,7 +32,7 @@ const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
         <strong>View All Information and Submit</strong>
       </p>
 
-      <NextStepGrid
+      <QuestionnaireNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

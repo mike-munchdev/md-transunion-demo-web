@@ -82,6 +82,9 @@ export interface IQuestionnaireStepsProps {
   setCurrentStepIndex: Function;
   formikProps: FormikProps<IQuestionnaireFormValues>;
 }
+export interface IQuestionnaireProps {
+  formikProps: FormikProps<IQuestionnaireFormValues>;
+}
 export interface IQuestionnaireFormValues {
   applicant: IApplicantInformation;
   coApplicant: IApplicantInformation;

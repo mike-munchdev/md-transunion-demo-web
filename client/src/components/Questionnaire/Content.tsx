@@ -1,7 +1,7 @@
 import React, { useState, FC } from 'react';
 import { Segment, Form, Header, Message } from 'semantic-ui-react';
 
-import NextStepGrid from './NextStepGrid';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 
 interface IContentProps {
   title: string;
@@ -84,7 +84,7 @@ const Content: FC<IContentProps> = ({
         <Form.TextArea label="About" placeholder="Tell us more about you..." />
         <Form.Checkbox label="I agree to the Terms and Conditions" />
       </Form>
-      <NextStepGrid
+      <QuestionnaireNavigationControl
         submit={submit}
         isFirstStep={isFirstStep}
         handleNextClick={handleNextClick}
