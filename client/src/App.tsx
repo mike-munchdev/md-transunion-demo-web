@@ -18,37 +18,34 @@ import { Container } from 'semantic-ui-react';
 import NotFound from './layout/NotFound';
 import { CustomerInformation } from './pages/CustomerInformation';
 import { Questionnaire } from './pages/Questionnaire';
+import PrivateClientRoute from './layout/PrivateClientRoute';
+import { DebtReliefIndex } from './pages/DebtRelief';
+const notDebtRelief = /^(?!.*(\/debtrelief)).*$/;
 
 const App: React.FC<RouteComponentProps> = () => {
   return (
     <ApolloProvider client={client}>
       <ToastProvider placement="top-right" autoDismiss={true}>
+        <Route path="/debtrelief" component={DebtReliefIndex} />
         <Route path="/" exact>
           <Home />
         </Route>
         <Route
-          path={'/(.+)'}
+          path={'/^(?!.*(/debtrelief)).*$/'}
           render={() => (
             <Fragment>
               <NavBar />
               <Container className="main-container">
                 <Switch>
-                  <PrivateRoute
+                  <PrivateClientRoute
                     exact
                     path="/customer"
                     component={CustomerInformation}
                   />
-                  <PrivateRoute exact path="/accounts" component={Accounts} />
-                  <PrivateRoute
+                  <PrivateClientRoute
                     exact
-                    path="/questionnaire/:step"
-                    component={Questionnaire}
-                  />
-
-                  <PrivateRoute
-                    exact
-                    path="/questionnaire"
-                    component={Questionnaire}
+                    path="/accounts"
+                    component={Accounts}
                   />
                   <Route component={NotFound} />
                 </Switch>

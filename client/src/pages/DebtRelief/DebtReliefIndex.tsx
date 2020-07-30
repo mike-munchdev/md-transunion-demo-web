@@ -25,8 +25,9 @@ import {
 import { Step } from 'semantic-ui-react';
 import { useToasts } from 'react-toast-notifications';
 import { questionnaireSchema } from '../../validation/questionnaireSchema';
+import PrivateClientRoute from '../../layout/PrivateClientRoute';
 
-const steps: IStep[] = [
+export const steps: IStep[] = [
   {
     title: 'Creditors',
     description: 'Start New Debt Comparison',
@@ -65,8 +66,8 @@ const steps: IStep[] = [
   },
 ];
 
-const Questionnaire = () => {
-  console.log('Questionnaire hit');
+const DebtReliefIndex: React.FC = () => {
+  console.log('DebtReliefIndex hit');
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const location = useLocation();
   const history = useHistory();
@@ -81,23 +82,6 @@ const Questionnaire = () => {
       setCurrentStepIndex(stepIndex);
     }
   }, [location.pathname]);
-
-  const renderStep = (s: IStep) => {
-    return (
-      <Step
-        link
-        onClick={() => {
-          history.push(`/questionnaire/${s.slug}`);
-        }}
-        key={s.slug}
-        active={steps[currentStepIndex].slug === s.slug}
-      >
-        <Step.Content>
-          <Step.Title>{s.title}</Step.Title>
-        </Step.Content>
-      </Step>
-    );
-  };
 
   const componentDecorator = (
     Step: FC<IQuestionnaireStepsProps>,
@@ -209,29 +193,22 @@ const Questionnaire = () => {
         {(formikProps) => {
           return (
             <>
-              <Step.Group ordered attached="top" size="tiny" widths={8}>
-                {steps.map((s) => renderStep(s))}
-              </Step.Group>
               <Switch>
-                <Redirect
-                  from="/questionnaire"
-                  exact
-                  to="/questionnaire/welcome"
-                />
+                <Redirect from="/debtrelief" exact to="/debtrelief/welcome" />
                 <Route
-                  path="/questionnaire/welcome"
+                  path="/debtrelief/welcome"
                   component={() => <Welcome formikProps={formikProps} />}
                 />
                 <Route
-                  path="/questionnaire/accountcreation"
+                  path="/debtrelief/accountcreation"
                   component={() => (
                     <AccountCreation formikProps={formikProps} />
                   )}
                 />
                 {steps.map((s, index) => (
-                  <Route
+                  <PrivateClientRoute
                     key={s.slug}
-                    path={`/questionnaire/${s.slug}`}
+                    path={`/debtrelief/${s.slug}`}
                     component={() =>
                       componentDecorator(s.component, index, steps, formikProps)
                     }
@@ -246,4 +223,4 @@ const Questionnaire = () => {
   );
 };
 
-export default Questionnaire;
+export default DebtReliefIndex;

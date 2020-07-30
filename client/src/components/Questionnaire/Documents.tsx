@@ -14,7 +14,7 @@ import {
   List,
   Icon,
 } from 'semantic-ui-react';
-import NextStepGrid from './NextStepGrid';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 import CalculationsTable from './CalculationsTable';
 
 const baseStyle: CSSProperties = {
@@ -186,7 +186,7 @@ const Documents: FC<IQuestionnaireStepsProps> = ({
           </Grid.Row>
         </Grid>
       </Form>
-      <NextStepGrid
+      <QuestionnaireNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

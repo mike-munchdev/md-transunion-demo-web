@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Grid, Form } from 'semantic-ui-react';
 
-interface INextStepProps {
+interface IQuestionnaireNavigationControlProps {
   handleNextClick?: Function;
   handlePreviousClick?: Function;
   submit?: boolean;
@@ -10,7 +10,7 @@ interface INextStepProps {
   nextStepDisabled?: boolean;
   prevStepDisabled?: boolean;
 }
-const NextStepGrid: FC<INextStepProps> = ({
+const QuestionnaireNavigationControl: FC<IQuestionnaireNavigationControlProps> = ({
   handleNextClick,
   handlePreviousClick,
   isFirstStep,
@@ -54,4 +54,4 @@ const NextStepGrid: FC<INextStepProps> = ({
   );
 };
 
-export default NextStepGrid;
+export default QuestionnaireNavigationControl;

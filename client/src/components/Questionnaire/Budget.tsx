@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps } from '.';
 
-import NextStepGrid from './NextStepGrid';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 import { Segment, Header, Form, Grid } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput } from '../FormFields';
@@ -281,7 +281,7 @@ const Budget: FC<IQuestionnaireStepsProps> = ({
         </Grid>
       </Form>
 
-      <NextStepGrid
+      <QuestionnaireNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

@@ -1,39 +1,44 @@
 import React, { FC } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireStepsProps } from '.';
+import { IQuestionnaireProps } from '.';
 
-import NextStepGrid from './NextStepGrid';
-import { Segment, Header, Form } from 'semantic-ui-react';
+import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import {
+  Segment,
+  Header,
+  Form,
+  Image,
+  Grid,
+  Container,
+  Button,
+} from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput } from '../FormFields';
 
-const AccountCreation: FC<IQuestionnaireStepsProps> = ({
-  currentStepIndex,
-  steps,
-  setCurrentStepIndex,
-  formikProps,
-}) => {
+const AccountCreation: FC<IQuestionnaireProps> = ({ formikProps }) => {
   const history = useHistory();
 
   const { values } = formikProps;
 
   const isStepInvalid = () => {
-    return false;
-    // return (
-    //   !!!values.applicant.email ||
-    //   !!!values.applicant.primaryPhoneNumber ||
-    //   !!!values.applicant.primaryPhoneNumberConfirm
-    // );
+    // return false;
+    return (
+      !!!values.applicant.email ||
+      !!!values.applicant.primaryPhoneNumber ||
+      !!!values.applicant.primaryPhoneNumberConfirm
+    );
   };
 
   return (
-    <Segment attached>
-      <Header size="medium">
-        {currentStepIndex >= 0
-          ? steps[currentStepIndex].title.toUpperCase()
-          : ''}
-      </Header>
+    <Container text>
+      <Grid
+        textAlign="center"
+        style={{ marginBottom: '10px' }}
+        verticalAlign="middle"
+      >
+        <Image src="/logo.png" size="large" />
+      </Grid>
 
       <p>
         <strong>
@@ -48,52 +53,52 @@ const AccountCreation: FC<IQuestionnaireStepsProps> = ({
         </strong>
       </p>
       <Form>
-        <Form.Group widths={3}>
-          <Field name="email">
+        <Container>
+          <Field name="applicant.email">
             {(props: FieldProps) => (
               <TextInput
+                width="6"
                 label="Email Address"
                 fieldProps={props}
                 placeholder="user@email.com"
               />
             )}
           </Field>
-          <Field name="primaryPhoneNumber">
+
+          <Field name="applicant.primaryPhoneNumber">
             {(props: FieldProps) => (
               <TextInput
+                width="6"
                 label="Primary Phone Number"
                 fieldProps={props}
                 placeholder="(###) ###-####"
               />
             )}
           </Field>
-          <Field name="primaryPhoneNumberConfirm">
+
+          <Field name="applicant.primaryPhoneNumberConfirm">
             {(props: FieldProps) => (
               <TextInput
+                width="6"
                 label="Confirm Primary Phone Number"
                 fieldProps={props}
                 placeholder="(###) ###-####"
               />
             )}
           </Field>
-        </Form.Group>
-      </Form>
 
-      <NextStepGrid
-        submit={currentStepIndex === steps.length - 1}
-        isFirstStep={currentStepIndex === 0}
-        handleNextClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex + 1].slug}`);
-          setCurrentStepIndex(currentStepIndex + 1);
-        }}
-        handlePreviousClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
-          setCurrentStepIndex(currentStepIndex - 1);
-        }}
-        nextStepButtonText="Save &amp; Continue"
-        nextStepDisabled={isStepInvalid()}
-      />
-    </Segment>
+          <Button
+            fluid
+            disabled={isStepInvalid()}
+            onClick={() => {
+              history.push(`/debtrelief/creditors`);
+            }}
+          >
+            Continue
+          </Button>
+        </Container>
+      </Form>
+    </Container>
   );
 };
 
