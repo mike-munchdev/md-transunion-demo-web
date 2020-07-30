@@ -7,7 +7,7 @@ import {
   useHistory,
 } from 'react-router-dom';
 import { useLoggedIn } from '../utils/customerInfo';
-import { Step } from 'semantic-ui-react';
+import { Step, Container, Grid, Image } from 'semantic-ui-react';
 import { steps } from '../pages/DebtRelief/DebtReliefIndex';
 import { IStep } from '../components/Questionnaire';
 
@@ -42,7 +42,14 @@ const PrivateClientRoute: React.FC<IProps> = ({
   const isDebtReliefLoggedIn = true;
 
   return (
-    <>
+    <Container>
+      <Grid
+        textAlign="center"
+        style={{ marginBottom: '10px' }}
+        verticalAlign="middle"
+      >
+        <Image src="/logo.png" size="large" />
+      </Grid>
       <Step.Group ordered attached="top" size="tiny" widths={8}>
         {steps.map((s) => renderStep(s))}
       </Step.Group>
@@ -61,7 +68,7 @@ const PrivateClientRoute: React.FC<IProps> = ({
           )
         }
       />
-    </>
+    </Container>
   );
 };
 
