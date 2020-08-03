@@ -36,15 +36,12 @@ const Creditors: FC<IQuestionnaireStepsProps> = ({
       <CreditorModal
         creditor={selectedCreditor}
         handleSave={(creditor: ICreditor) => {
-          console.log('creditor', creditor);
           if (creditor.id) {
-            console.log('editing');
             const filteredCreditors = creditors.filter(
               (c) => c.id !== creditor.id
             );
             setFieldValue('creditors', [...filteredCreditors, { ...creditor }]);
           } else {
-            console.log('adding');
             setFieldValue('creditors', [
               ...creditors,
               { ...creditor, id: uniqueId() },
@@ -57,7 +54,6 @@ const Creditors: FC<IQuestionnaireStepsProps> = ({
           setModalOpen(false);
         }}
         handleOpen={() => {
-          console.log('handleOpen');
           setSelectedCreditor(null);
           setModalOpen(true);
         }}
@@ -114,7 +110,6 @@ const Creditors: FC<IQuestionnaireStepsProps> = ({
                             icon
                             size="small"
                             onClick={() => {
-                              console.log('creditor', creditor);
                               setSelectedCreditor(creditor);
                               setModalOpen(true);
                             }}

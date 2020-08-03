@@ -3,16 +3,7 @@ import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireProps } from '.';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
-import {
-  Segment,
-  Header,
-  Form,
-  Image,
-  Grid,
-  Container,
-  Button,
-} from 'semantic-ui-react';
+import { Form, Image, Grid, Container, Button } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput } from '../FormFields';
 

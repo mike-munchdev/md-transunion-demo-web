@@ -1,11 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import {
-  Switch,
-  Route,
-  Redirect,
-  useLocation,
-  useHistory,
-} from 'react-router-dom';
+import { Switch, Route, Redirect, useLocation } from 'react-router-dom';
 import { Formik, FormikProps } from 'formik';
 
 import {
@@ -22,7 +16,6 @@ import {
   IQuestionnaireFormValues,
 } from '../../components/Questionnaire/index';
 
-import { Step } from 'semantic-ui-react';
 import { useToasts } from 'react-toast-notifications';
 import { questionnaireSchema } from '../../validation/questionnaireSchema';
 import PrivateClientRoute from '../../layout/PrivateClientRoute';
@@ -67,10 +60,9 @@ export const steps: IStep[] = [
 ];
 
 const DebtReliefIndex: React.FC = () => {
-  console.log('DebtReliefIndex hit');
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [, setCurrentStepIndex] = useState(0);
   const location = useLocation();
-  const history = useHistory();
+
   const { addToast } = useToasts();
 
   useEffect(() => {
@@ -197,19 +189,17 @@ const DebtReliefIndex: React.FC = () => {
                 <Redirect from="/debtrelief" exact to="/debtrelief/welcome" />
                 <Route
                   path="/debtrelief/welcome"
-                  component={() => <Welcome formikProps={formikProps} />}
+                  render={() => <Welcome formikProps={formikProps} />}
                 />
                 <Route
                   path="/debtrelief/accountcreation"
-                  component={() => (
-                    <AccountCreation formikProps={formikProps} />
-                  )}
+                  render={() => <AccountCreation formikProps={formikProps} />}
                 />
                 {steps.map((s, index) => (
                   <PrivateClientRoute
                     key={s.slug}
                     path={`/debtrelief/${s.slug}`}
-                    component={() =>
+                    render={() =>
                       componentDecorator(s.component, index, steps, formikProps)
                     }
                   />

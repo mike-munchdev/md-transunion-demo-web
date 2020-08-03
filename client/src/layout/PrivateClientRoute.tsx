@@ -6,21 +6,23 @@ import {
   Redirect,
   useHistory,
 } from 'react-router-dom';
-import { useLoggedIn } from '../utils/customerInfo';
+
 import { Step, Container, Grid, Image } from 'semantic-ui-react';
 import { steps } from '../pages/DebtRelief/DebtReliefIndex';
 import { IStep } from '../components/Questionnaire';
 
 interface IProps extends RouteProps {
-  component: React.ComponentType<RouteComponentProps<any>>;
+  component?: React.ComponentType<RouteComponentProps<any>>;
+  render?: () => JSX.Element;
 }
 
 const PrivateClientRoute: React.FC<IProps> = ({
+  render,
   component: Component,
   ...rest
 }) => {
   const history = useHistory();
-  console.log('rest', rest);
+
   const currentStepIndex = 0;
   const renderStep = (s: IStep) => {
     return (
@@ -57,7 +59,11 @@ const PrivateClientRoute: React.FC<IProps> = ({
         {...rest}
         render={(props) =>
           isDebtReliefLoggedIn ? (
-            <Component {...props} />
+            render !== undefined ? (
+              render()
+            ) : (
+              <Component {...props} />
+            )
           ) : (
             <Redirect
               to={{

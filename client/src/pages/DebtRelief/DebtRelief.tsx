@@ -1,13 +1,7 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Container } from 'semantic-ui-react';
-import { Switch, Route } from 'react-router-dom';
-import PrivateClientRoute from '../../layout/PrivateClientRoute';
-import { Questionnaire } from '../Questionnaire';
-import Login from './Login';
-import DebtReliefHome from './DebtReliefHome';
 
-const DebtRelief = (props: any) => {
-  console.log('DebtRelief:props', props);
+const DebtRelief = () => {
   return (
     <Fragment>
       <Container className="debt-relief-container">

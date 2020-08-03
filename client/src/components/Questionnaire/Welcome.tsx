@@ -3,16 +3,7 @@ import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireProps } from '.';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
-import {
-  Segment,
-  Header,
-  Form,
-  Image,
-  Grid,
-  Container,
-  Button,
-} from 'semantic-ui-react';
+import { Form, Image, Grid, Container, Button } from 'semantic-ui-react';
 import { stateOptions } from '../../utils/lookup';
 import { Field } from 'formik';
 import { SelectInput } from '../FormFields';
@@ -21,7 +12,6 @@ const Welcome: FC<IQuestionnaireProps> = ({ formikProps }) => {
   const history = useHistory();
 
   const { setFieldValue, setFieldTouched, values } = formikProps;
-  console.log('values.applicant.state', values.applicant.state);
 
   const isStepInvalid = () => {
     // return false;
