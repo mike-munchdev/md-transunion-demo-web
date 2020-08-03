@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const Login = (props: any) => <div>Login</div>;
+const Login = () => <div>Login</div>;
 
 export default Login;

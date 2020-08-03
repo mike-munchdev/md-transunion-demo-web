@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const DebtReliefHome = (props: any) => <div>DebtReliefHome</div>;
+const DebtReliefHome = () => <div>DebtReliefHome</div>;
 
 export default DebtReliefHome;
