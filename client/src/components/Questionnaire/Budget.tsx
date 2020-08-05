@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps } from '.';
@@ -7,15 +7,19 @@ import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 import { Segment, Header, Form, Grid } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput } from '../FormFields';
+import { DebtReliefContext } from '../../utils/context';
 
 const Budget: FC<IQuestionnaireStepsProps> = ({
-  currentStepIndex,
+  stepIndex,
   steps,
-  setCurrentStepIndex,
+
   formikProps,
 }) => {
   const history = useHistory();
-
+  const { currentStepIndex, setCurrentStepIndexContext } = useContext(
+    DebtReliefContext
+  );
+  console.log('In Budget page', currentStepIndex);
   const isStepInvalid = () => {
     return false;
   };
@@ -285,12 +289,12 @@ const Budget: FC<IQuestionnaireStepsProps> = ({
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex + 1].slug}`);
-          setCurrentStepIndex(currentStepIndex + 1);
+          history.push(`/debtrelief/${steps[currentStepIndex + 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex + 1);
         }}
         handlePreviousClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
-          setCurrentStepIndex(currentStepIndex - 1);
+          history.push(`/debtrelief/${steps[currentStepIndex - 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex - 1);
         }}
         nextStepButtonText="Save &amp; Continue"
         nextStepDisabled={isStepInvalid()}

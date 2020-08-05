@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps } from '.';
@@ -13,15 +13,18 @@ import {
   dayToMakePaymentOptions,
 } from '../../utils/lookup';
 import CalculationsTable from './CalculationsTable';
+import { DebtReliefContext } from '../../utils/context';
 
 const PaymentSetup: FC<IQuestionnaireStepsProps> = ({
-  currentStepIndex,
+  stepIndex,
   steps,
-  setCurrentStepIndex,
+
   formikProps,
 }) => {
   const history = useHistory();
-
+  const { currentStepIndex, setCurrentStepIndexContext } = useContext(
+    DebtReliefContext
+  );
   const { values, setFieldValue, setFieldTouched } = formikProps;
   const { creditors } = values;
   const isStepInvalid = () => {
@@ -170,12 +173,12 @@ const PaymentSetup: FC<IQuestionnaireStepsProps> = ({
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex + 1].slug}`);
-          setCurrentStepIndex(currentStepIndex + 1);
+          history.push(`/debtrelief/${steps[currentStepIndex + 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex + 1);
         }}
         handlePreviousClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
-          setCurrentStepIndex(currentStepIndex - 1);
+          history.push(`/debtrelief/${steps[currentStepIndex - 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex - 1);
         }}
         nextStepButtonText="Save &amp; Continue"
         nextStepDisabled={isStepInvalid()}

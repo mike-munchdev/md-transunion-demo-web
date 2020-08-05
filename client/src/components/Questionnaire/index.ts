@@ -77,9 +77,9 @@ export interface IApplicantInformation {
   hardshipReason: string;
 }
 export interface IQuestionnaireStepsProps {
-  currentStepIndex: number;
+  stepIndex: number;
   steps: IStep[];
-  setCurrentStepIndex: Function;
+
   formikProps: FormikProps<IQuestionnaireFormValues>;
 }
 export interface IQuestionnaireProps {

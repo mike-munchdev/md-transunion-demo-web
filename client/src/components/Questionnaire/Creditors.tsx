@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { IQuestionnaireStepsProps, ICreditor } from '.';
@@ -9,15 +9,19 @@ import CreditorModal from './CreditorModal';
 import { creditorOptions } from '../../utils/lookup';
 import { uniqueId } from 'lodash';
 import CalculationsTable from './CalculationsTable';
+import { DebtReliefContext } from '../../utils/context';
 
 const Creditors: FC<IQuestionnaireStepsProps> = ({
-  currentStepIndex,
+  stepIndex,
   steps,
-  setCurrentStepIndex,
+
   formikProps,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCreditor, setSelectedCreditor] = useState(null);
+  const { currentStepIndex, setCurrentStepIndexContext } = useContext(
+    DebtReliefContext
+  );
   const history = useHistory();
 
   const { values, setFieldValue } = formikProps;
@@ -144,12 +148,12 @@ const Creditors: FC<IQuestionnaireStepsProps> = ({
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex + 1].slug}`);
-          setCurrentStepIndex(currentStepIndex + 1);
+          history.push(`/debtrelief/${steps[currentStepIndex + 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex + 1);
         }}
         handlePreviousClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
-          setCurrentStepIndex(currentStepIndex - 1);
+          history.push(`/debtrelief/${steps[currentStepIndex - 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex - 1);
         }}
         nextStepButtonText="Next"
         nextStepDisabled={isStepInvalid()}
