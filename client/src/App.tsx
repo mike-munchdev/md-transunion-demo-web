@@ -18,7 +18,7 @@ import { Container } from 'semantic-ui-react';
 import NotFound from './layout/NotFound';
 import { CustomerInformation } from './pages/CustomerInformation';
 
-import PrivateClientRoute from './layout/PrivateClientRoute';
+import PrivateDebtReliefRoute from './layout/PrivateDebtReliefRoute';
 import { DebtReliefIndex } from './pages/DebtRelief';
 
 const App: React.FC<RouteComponentProps> = () => {
@@ -36,12 +36,12 @@ const App: React.FC<RouteComponentProps> = () => {
               <NavBar />
               <Container className="main-container">
                 <Switch>
-                  <PrivateClientRoute
+                  <PrivateDebtReliefRoute
                     exact
                     path="/customer"
                     component={CustomerInformation}
                   />
-                  <PrivateClientRoute
+                  <PrivateDebtReliefRoute
                     exact
                     path="/accounts"
                     component={Accounts}

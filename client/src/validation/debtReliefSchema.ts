@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export const questionnaireSchema = yup.object().shape({
+export const debtReliefSchema = yup.object().shape({
   state: yup.string().required('State is required'),
   email: yup.string().required('Email is required'),
   primaryPhoneNumber: yup.string().required('Primary phone number is required'),

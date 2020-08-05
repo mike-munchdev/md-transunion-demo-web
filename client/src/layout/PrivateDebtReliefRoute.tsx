@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   RouteProps,
   RouteComponentProps,
@@ -7,23 +7,33 @@ import {
   useHistory,
 } from 'react-router-dom';
 
-import { Step, Container, Grid, Image } from 'semantic-ui-react';
+import {
+  Step,
+  Container,
+  Grid,
+  Image,
+  Button,
+  Label,
+  Icon,
+} from 'semantic-ui-react';
 import { steps } from '../pages/DebtRelief/DebtReliefIndex';
 import { IStep } from '../components/Questionnaire';
+import { DebtReliefAuthContext, DebtReliefContext } from '../utils/context';
 
 interface IProps extends RouteProps {
   component?: React.ComponentType<RouteComponentProps<any>>;
   render?: () => JSX.Element;
 }
 
-const PrivateClientRoute: React.FC<IProps> = ({
+const PrivateDebtReliefRoute: React.FC<IProps> = ({
   render,
   component: Component,
   ...rest
 }) => {
+  const { isLoggedIn, signOut } = useContext(DebtReliefAuthContext);
+  const { currentStepIndex } = useContext(DebtReliefContext);
   const history = useHistory();
 
-  const currentStepIndex = 0;
   const renderStep = (s: IStep) => {
     return (
       <Step
@@ -41,8 +51,6 @@ const PrivateClientRoute: React.FC<IProps> = ({
     );
   };
 
-  const isDebtReliefLoggedIn = true;
-
   return (
     <Container>
       <Grid
@@ -50,7 +58,31 @@ const PrivateClientRoute: React.FC<IProps> = ({
         style={{ marginBottom: '10px' }}
         verticalAlign="middle"
       >
-        <Image src="/logo.png" size="large" />
+        <Grid.Row columns={3}>
+          <Grid.Column textAlign="left" verticalAlign="bottom">
+            <Button as="div" labelPosition="right">
+              <Button icon color="blue">
+                <Icon name="help" />
+              </Button>
+              <Label as="a" basic color="blue">
+                Get Help
+              </Label>
+            </Button>
+          </Grid.Column>
+          <Grid.Column>
+            <Image src="/logo.png" size="large" />
+          </Grid.Column>
+          <Grid.Column textAlign="right" verticalAlign="bottom">
+            <Button as="div" labelPosition="left" onClick={() => signOut()}>
+              <Label as="a" basic color="blue">
+                Logout
+              </Label>
+              <Button icon color="blue">
+                <Icon name="log out" />
+              </Button>
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
       <Step.Group ordered attached="top" size="tiny" widths={8}>
         {steps.map((s) => renderStep(s))}
@@ -58,7 +90,7 @@ const PrivateClientRoute: React.FC<IProps> = ({
       <Route
         {...rest}
         render={(props) =>
-          isDebtReliefLoggedIn ? (
+          isLoggedIn ? (
             render !== undefined ? (
               render()
             ) : (
@@ -78,4 +110,4 @@ const PrivateClientRoute: React.FC<IProps> = ({
   );
 };
 
-export default PrivateClientRoute;
+export default PrivateDebtReliefRoute;

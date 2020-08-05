@@ -11,12 +11,12 @@ const DebtRelief = () => {
 
           <PrivateClientRoute
             exact
-            path="/questionnaire/:step"
+            path="/debtrelief/:step"
             component={Questionnaire}
           />
           <PrivateClientRoute
             exact
-            path="/questionnaire"
+            path="/debtrelief"
             component={Questionnaire}
           />
           <Route component={Login} />

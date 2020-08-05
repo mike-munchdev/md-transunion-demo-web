@@ -1,4 +1,4 @@
-import React, { FC, useMemo, CSSProperties, useState } from 'react';
+import React, { FC, useMemo, CSSProperties, useState, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
@@ -16,6 +16,7 @@ import {
 } from 'semantic-ui-react';
 import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
 import CalculationsTable from './CalculationsTable';
+import { DebtReliefContext } from '../../utils/context';
 
 const baseStyle: CSSProperties = {
   flex: 1,
@@ -46,12 +47,15 @@ const rejectStyle = {
 };
 
 const Documents: FC<IQuestionnaireStepsProps> = ({
-  currentStepIndex,
+  stepIndex,
   steps,
-  setCurrentStepIndex,
+
   formikProps,
 }) => {
   const history = useHistory();
+  const { currentStepIndex, setCurrentStepIndexContext } = useContext(
+    DebtReliefContext
+  );
   const [acceptedFiles, setAcceptedFiles] = useState([]);
   const onDrop = (files: File[]) => {
     const newFiles = [...acceptedFiles, ...files];
@@ -122,13 +126,10 @@ const Documents: FC<IQuestionnaireStepsProps> = ({
           <Grid.Row columns={2}>
             <Grid.Column>
               <Message>
-                <p>
-                  <Header as="h5">Contracts</Header>Your contract is ready to
-                  view, or download. If you have troubles with the View My
-                  Contract link below please right click on the link and picking
-                  "Save As..." and save the PDF to your computer.
-                </p>
-
+                <Header as="h5">Contracts</Header>Your contract is ready to
+                view, or download. If you have troubles with the View My
+                Contract link below please right click on the link and picking
+                "Save As..." and save the PDF to your computer.
                 <p>View My Contract</p>
                 <p>
                   Please print, review, and sign the contract. You can send the
@@ -190,12 +191,12 @@ const Documents: FC<IQuestionnaireStepsProps> = ({
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex + 1].slug}`);
-          setCurrentStepIndex(currentStepIndex + 1);
+          history.push(`/debtrelief/${steps[currentStepIndex + 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex + 1);
         }}
         handlePreviousClick={() => {
-          history.push(`/questionnaire/${steps[currentStepIndex - 1].slug}`);
-          setCurrentStepIndex(currentStepIndex - 1);
+          history.push(`/debtrelief/${steps[currentStepIndex - 1].slug}`);
+          setCurrentStepIndexContext(currentStepIndex - 1);
         }}
         nextStepButtonText="Save &amp; Continue"
         nextStepDisabled={isStepInvalid()}

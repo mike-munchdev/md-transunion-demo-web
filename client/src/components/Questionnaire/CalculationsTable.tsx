@@ -10,9 +10,11 @@ const CalculationsTable: FC<ICalculationsTable> = ({ creditors }) => {
   return (
     <Table celled>
       <Table.Header>
-        <Table.HeaderCell width={3} />
-        <Table.HeaderCell width={3}>On Your Own</Table.HeaderCell>
-        <Table.HeaderCell width={3}>On Our Plan</Table.HeaderCell>
+        <Table.Row>
+          <Table.HeaderCell width={3} />
+          <Table.HeaderCell width={3}>On Your Own</Table.HeaderCell>
+          <Table.HeaderCell width={3}>On Our Plan</Table.HeaderCell>
+        </Table.Row>
       </Table.Header>
       <Table.Body>
         <Table.Row>
@@ -54,7 +56,7 @@ const CalculationsTable: FC<ICalculationsTable> = ({ creditors }) => {
       </Table.Body>
       <Table.Footer>
         <Table.Row>
-          <Table.Cell colspan="3">
+          <Table.Cell colSpan="3">
             †Your plan payment of $27.00 includes a state allowed monthly fee of
             $3.00.
           </Table.Cell>

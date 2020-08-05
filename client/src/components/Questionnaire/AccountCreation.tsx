@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 
-import { useHistory } from 'react-router-dom';
 import { IQuestionnaireProps } from '.';
 
 import { Form, Image, Grid, Container, Button } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput } from '../FormFields';
+import { DebtReliefAuthContext } from '../../utils/context';
 
 const AccountCreation: FC<IQuestionnaireProps> = ({ formikProps }) => {
-  const history = useHistory();
+  const { signIn } = useContext(DebtReliefAuthContext);
 
   const { values } = formikProps;
 
@@ -82,7 +82,7 @@ const AccountCreation: FC<IQuestionnaireProps> = ({ formikProps }) => {
             fluid
             disabled={isStepInvalid()}
             onClick={() => {
-              history.push(`/debtrelief/creditors`);
+              signIn('loggedin', values, '/debtrelief/creditors');
             }}
           >
             Continue
