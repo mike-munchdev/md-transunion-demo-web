@@ -8,7 +8,7 @@ import { FormErrorList } from '../../components/Errors';
 import { DebtReliefAuthContext } from '../../utils/context';
 import { debtReliefLoginSchema } from '../../validation/debtReliefLoginSchema';
 
-const Home: React.FC = () => {
+const Login: React.FC = () => {
   const { signIn } = useContext(DebtReliefAuthContext);
   return (
     <Grid
@@ -92,4 +92,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Login;

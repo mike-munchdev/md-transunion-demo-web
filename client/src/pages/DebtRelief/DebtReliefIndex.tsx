@@ -1,5 +1,11 @@
 import React, { FC, useState, useEffect, useMemo } from 'react';
-import { Switch, Redirect, useLocation, useHistory } from 'react-router-dom';
+import {
+  Switch,
+  Redirect,
+  useLocation,
+  useHistory,
+  Route,
+} from 'react-router-dom';
 import { Formik, FormikProps } from 'formik';
 
 import {
@@ -13,14 +19,14 @@ import {
   IStep,
   IQuestionnaireStepsProps,
   Confirm,
-  IQuestionnaireFormValues,
+  IApplication,
 } from '../../components/Questionnaire/index';
 
 import { useToasts } from 'react-toast-notifications';
 import { debtReliefSchema } from '../../validation/debtReliefSchema';
 import PrivateDebtReliefRoute from '../../layout/PrivateDebtReliefRoute';
 import { DebtReliefAuthContext, DebtReliefContext } from '../../utils/context';
-import { Login } from '.';
+import { Login, Logout } from '.';
 import IfAuthSkipRoute from '../../layout/IfAuthSkipRoute';
 
 export const steps: IStep[] = [
@@ -66,7 +72,7 @@ const DebtReliefIndex: React.FC = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [, setIsLoading] = useState(true);
   const [, setUserToken] = useState(null);
-  const [, setApplication] = useState(null);
+  const [application, setApplication] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
   const history = useHistory();
@@ -77,7 +83,7 @@ const DebtReliefIndex: React.FC = () => {
       redirect: (location: string) => {
         history.push(location);
       },
-      signIn: (token: string, application: any, location?: string) => {
+      signIn: (token: string, application: IApplication, location?: string) => {
         setIsLoading(false);
         setUserToken(token);
         setApplication(application);
@@ -88,12 +94,14 @@ const DebtReliefIndex: React.FC = () => {
         history.push(location ? location : '/debtrelief/creditors');
       },
       signOut: () => {
+        console.log('signOut called');
         localStorage.removeItem('drToken');
         localStorage.removeItem('drApplication');
         setIsLoading(false);
         setUserToken(null);
         setApplication(null);
         setIsLoggedIn(false);
+        history.push('/debtrelief');
       },
       signUp: (message: string) => {
         addToast(message, { appearance: 'success' });
@@ -103,10 +111,11 @@ const DebtReliefIndex: React.FC = () => {
   }, [addToast, history, isLoggedIn]);
 
   useEffect(() => {
-    // console.log(
-    //   'localStorage.getItem(drToken) !== null',
-    //   localStorage.getItem('drToken') !== null
-    // );
+    const applicationStorage = localStorage.getItem('drApplication');
+    console.log('applicationStorage', applicationStorage);
+    if (applicationStorage) {
+      setApplication(JSON.parse(applicationStorage));
+    }
     setIsLoggedIn(localStorage.getItem('drToken') !== null);
   }, []);
 
@@ -124,7 +133,7 @@ const DebtReliefIndex: React.FC = () => {
     Step: FC<IQuestionnaireStepsProps>,
     stepIndex: number,
     steps: IStep[],
-    formikProps: FormikProps<IQuestionnaireFormValues>
+    formikProps: FormikProps<IApplication>
   ) => {
     return (
       <Step
@@ -142,6 +151,20 @@ const DebtReliefIndex: React.FC = () => {
           currentStepIndex,
           setCurrentStepIndexContext: (index: number) => {
             setCurrentStepIndex(index);
+          },
+          setApplicationContext: (application: IApplication) => {
+            setApplication(application);
+          },
+          getApplicationContext: () => {
+            const applicationFromLocalStorage = localStorage.getItem(
+              'drApplication'
+            );
+
+            return application
+              ? application
+              : applicationFromLocalStorage
+              ? JSON.parse(applicationFromLocalStorage)
+              : null;
           },
         }}
       >
@@ -252,6 +275,7 @@ const DebtReliefIndex: React.FC = () => {
                     exact
                     component={Login}
                   />
+                  <Route path="/debtrelief/logout" exact component={Logout} />
                   {steps.map((s, index) => (
                     <PrivateDebtReliefRoute
                       key={s.slug}
