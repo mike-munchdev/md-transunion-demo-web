@@ -82,8 +82,6 @@ const PrivateDebtReliefRoute: React.FC<IProps> = ({
                 email: string,
                 phoneNumber: string
               ) => {
-                console.log(firstName, lastName, email, phoneNumber);
-
                 setModalOpen(false);
               }}
               handleCancel={() => {

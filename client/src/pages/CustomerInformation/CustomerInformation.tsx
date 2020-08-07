@@ -32,7 +32,6 @@ const CustomerInformation: React.FC<RouteComponentProps<
     },
     fetchPolicy: 'network-only',
     onError: (error) => {
-      console.log('error', error);
       setIsLoading(false);
       addToast(
         'An error occurred retrieving customer information. Please try again.',

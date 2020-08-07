@@ -27,7 +27,7 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
       fetchPolicy: 'network-only',
       onError: (e) => {
         setIsLoading(false);
-        console.log(e);
+
         addToast(
           'An error occurred retrieving customer information. Please try again.',
           { appearance: 'error' }
@@ -40,7 +40,6 @@ const TransUnionQueryForm: React.FC<ITransUnionQueryFormProps> = ({
     }
   );
 
-  
   if (isLoading) return <LoadingComponent />;
 
   return (

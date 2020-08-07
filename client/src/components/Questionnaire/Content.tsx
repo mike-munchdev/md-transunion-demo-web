@@ -25,9 +25,7 @@ const Content: FC<IContentProps> = ({
     { key: 'f', text: 'Female', value: 'female' },
     { key: 'o', text: 'Other', value: 'other' },
   ];
-  const handleChange = () => {
-    // console.log('do nothing');
-  };
+  const handleChange = () => {};
   return (
     <Segment attached>
       <Header size="medium">{title}</Header>
