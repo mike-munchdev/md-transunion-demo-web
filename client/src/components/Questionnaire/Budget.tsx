@@ -19,7 +19,7 @@ const Budget: FC<IQuestionnaireStepsProps> = ({
   const { currentStepIndex, setCurrentStepIndexContext } = useContext(
     DebtReliefContext
   );
-  console.log('In Budget page', currentStepIndex);
+
   const isStepInvalid = () => {
     return false;
   };

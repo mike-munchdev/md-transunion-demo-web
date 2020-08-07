@@ -30,9 +30,7 @@ const HelpModal: FC<IHelpModal> = ({
         email: applicant ? applicant.email : '',
       }}
       validationSchema={helpModalSchema}
-      onSubmit={() => {
-        // console.log('submitting');
-      }}
+      onSubmit={() => {}}
     >
       {(formikProps) => {
         const { handleSubmit, values } = formikProps;

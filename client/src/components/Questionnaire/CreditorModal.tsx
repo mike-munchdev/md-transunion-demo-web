@@ -31,9 +31,7 @@ const CreditorModal: FC<ICreditorModal> = ({
         currentPayment: creditor ? creditor.currentPayment : 0,
       }}
       validationSchema={creditorModalSchema}
-      onSubmit={(values) => {
-        // console.log('submitting');
-      }}
+      onSubmit={(values) => {}}
     >
       {(formikProps) => {
         const {

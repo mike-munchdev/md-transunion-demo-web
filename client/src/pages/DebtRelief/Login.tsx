@@ -28,7 +28,6 @@ const Login: React.FC = () => {
           }}
           validationSchema={debtReliefLoginSchema}
           onSubmit={() => {
-            console.log('login');
             signIn('loggedIn', {});
           }}
         >

@@ -94,7 +94,6 @@ const DebtReliefIndex: React.FC = () => {
         history.push(location ? location : '/debtrelief/creditors');
       },
       signOut: () => {
-        console.log('signOut called');
         localStorage.removeItem('drToken');
         localStorage.removeItem('drApplication');
         setIsLoading(false);
@@ -112,7 +111,7 @@ const DebtReliefIndex: React.FC = () => {
 
   useEffect(() => {
     const applicationStorage = localStorage.getItem('drApplication');
-    console.log('applicationStorage', applicationStorage);
+
     if (applicationStorage) {
       setApplication(JSON.parse(applicationStorage));
     }
