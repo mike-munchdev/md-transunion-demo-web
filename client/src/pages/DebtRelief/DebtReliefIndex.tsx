@@ -73,7 +73,9 @@ const DebtReliefIndex: React.FC = () => {
   const [, setIsLoading] = useState(true);
   const [, setUserToken] = useState(null);
   const [application, setApplication] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem('drToken') !== null
+  );
   const location = useLocation();
   const history = useHistory();
   const { addToast } = useToasts();
