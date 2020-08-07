@@ -1,24 +1,16 @@
-import AccountCreation from './AccountCreation';
-import Budget from './Budget';
-import Confirm from './Confirm';
-import Creditors from './Creditors';
-import Documents from './Documents';
-import PaymentSetup from './PaymentSetup';
-import PersonalInformation from './PersonalInformation';
-import Welcome from './Welcome';
 import { FC } from 'react';
 import { FormikProps } from 'formik';
+export { default as AccountCreation } from './AccountCreation';
+export { default as Budget } from './Budget';
+export { default as Confirm } from './Confirm';
+export { default as Creditors } from './Creditors';
+export { default as Documents } from './Documents';
+export { default as PaymentSetup } from './PaymentSetup';
+export { default as PersonalInformation } from './PersonalInformation';
+export { default as Welcome } from './Welcome';
+export { default as HelpModal } from './HelpModal';
+export { default as CreditorModal } from './CreditorModal';
 
-export {
-  AccountCreation,
-  Budget,
-  Confirm,
-  Creditors,
-  Documents,
-  PaymentSetup,
-  PersonalInformation,
-  Welcome,
-};
 export interface ICreditor {
   id: number;
   creditorId: number;
@@ -80,12 +72,12 @@ export interface IQuestionnaireStepsProps {
   stepIndex: number;
   steps: IStep[];
 
-  formikProps: FormikProps<IQuestionnaireFormValues>;
+  formikProps: FormikProps<IApplication>;
 }
 export interface IQuestionnaireProps {
-  formikProps: FormikProps<IQuestionnaireFormValues>;
+  formikProps: FormikProps<IApplication>;
 }
-export interface IQuestionnaireFormValues {
+export interface IApplication {
   applicant: IApplicantInformation;
   coApplicant: IApplicantInformation;
   creditors: ICreditor[];

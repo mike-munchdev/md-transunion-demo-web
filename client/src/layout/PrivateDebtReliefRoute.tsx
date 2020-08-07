@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   RouteProps,
   RouteComponentProps,
@@ -17,7 +17,7 @@ import {
   Icon,
 } from 'semantic-ui-react';
 import { steps } from '../pages/DebtRelief/DebtReliefIndex';
-import { IStep } from '../components/Questionnaire';
+import { IStep, HelpModal } from '../components/Questionnaire';
 import { DebtReliefAuthContext, DebtReliefContext } from '../utils/context';
 
 interface IProps extends RouteProps {
@@ -30,10 +30,14 @@ const PrivateDebtReliefRoute: React.FC<IProps> = ({
   component: Component,
   ...rest
 }) => {
+  const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn, signOut } = useContext(DebtReliefAuthContext);
-  const { currentStepIndex } = useContext(DebtReliefContext);
-  const history = useHistory();
+  const { currentStepIndex, getApplicationContext } = useContext(
+    DebtReliefContext
+  );
 
+  const history = useHistory();
+  const application = getApplicationContext();
   const renderStep = (s: IStep) => {
     return (
       <Step
@@ -51,6 +55,16 @@ const PrivateDebtReliefRoute: React.FC<IProps> = ({
     );
   };
 
+  if (!application) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/debtrelief/logout',
+        }}
+      />
+    );
+  }
+
   return (
     <Container>
       <Grid
@@ -60,14 +74,26 @@ const PrivateDebtReliefRoute: React.FC<IProps> = ({
       >
         <Grid.Row columns={3}>
           <Grid.Column textAlign="left" verticalAlign="bottom">
-            <Button as="div" labelPosition="right">
-              <Button icon color="blue">
-                <Icon name="help" />
-              </Button>
-              <Label as="a" basic color="blue">
-                Get Help
-              </Label>
-            </Button>
+            <HelpModal
+              applicant={application.applicant}
+              handleSave={(
+                firstName: string,
+                lastName: string,
+                email: string,
+                phoneNumber: string
+              ) => {
+                console.log(firstName, lastName, email, phoneNumber);
+
+                setModalOpen(false);
+              }}
+              handleCancel={() => {
+                setModalOpen(false);
+              }}
+              handleOpen={() => {
+                setModalOpen(true);
+              }}
+              isOpen={modalOpen}
+            />
           </Grid.Column>
           <Grid.Column>
             <Image src="/logo.png" size="large" />
