@@ -7,7 +7,6 @@ const Logout: FC<IDebtReliefProps> = ({ formikProps }) => {
   const { signOut } = useContext(DebtReliefAuthContext);
   const { resetForm } = formikProps;
   useEffect(() => {
-    console.log('calling resetForm');
     resetForm();
     signOut();
   }, [signOut]);
