@@ -7,14 +7,6 @@ import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 export const history = createBrowserHistory();
 
-console.log(
-  'process.env.REACT_APP_GRAPHQL_URL',
-  process.env.REACT_APP_GRAPHQL_URL
-);
-console.log(
-  'process.env.REACT_APP_HTTP_PROTOCOL',
-  process.env.REACT_APP_HTTP_PROTOCOL
-);
 ReactDOM.render(
   <Router history={history}>
     <App />

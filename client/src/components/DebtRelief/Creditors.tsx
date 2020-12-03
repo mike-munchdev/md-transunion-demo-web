@@ -30,7 +30,7 @@ const Creditors: FC<IDebtReliefStepsProps> = ({
   const history = useHistory();
   const applicationContext = getApplicationContext();
   const [isLoading, setIsLoading] = useState(false);
-  console.log('applicationContext', applicationContext);
+
   const [callUpdateApplication] = useMutation(UPDATE_APPLICATION);
 
   const { values, setFieldValue } = formikProps;

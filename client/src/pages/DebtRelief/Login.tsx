@@ -37,9 +37,7 @@ const Login: React.FC = () => {
           token,
           application,
         } = getApplicationAndTokenByEmailAndPhoneNumber;
-        console.log('ok', ok);
-        console.log('token', token);
-        console.log('application', application);
+
         if (ok) {
           if (!token) {
             // history.push('/debtrelief/login');

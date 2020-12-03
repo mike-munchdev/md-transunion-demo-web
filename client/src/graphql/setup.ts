@@ -15,7 +15,7 @@ const httpLink = new HttpLink({
 
 const token = localStorage.getItem('token');
 const drToken = localStorage.getItem('drToken');
-console.log('setting up', token, drToken);
+
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
   uri: `${wsLinkUri}/graphql`,
