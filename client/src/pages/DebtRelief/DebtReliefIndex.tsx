@@ -17,15 +17,19 @@ import {
   PersonalInformation,
   Welcome,
   IStep,
-  IQuestionnaireStepsProps,
+  IDebtReliefStepsProps,
   Confirm,
   IApplication,
-} from '../../components/Questionnaire/index';
+} from '../../components/DebtRelief/index';
 
 import { useToasts } from 'react-toast-notifications';
 import { debtReliefSchema } from '../../validation/debtReliefSchema';
 import PrivateDebtReliefRoute from '../../layout/PrivateDebtReliefRoute';
-import { DebtReliefAuthContext, DebtReliefContext } from '../../utils/context';
+import {
+  DebtReliefAuthContext,
+  DebtReliefContext,
+  initialApplicationValues,
+} from '../../utils/context';
 import { Login, Logout } from '.';
 import IfAuthSkipRoute from '../../layout/IfAuthSkipRoute';
 
@@ -111,6 +115,30 @@ const DebtReliefIndex: React.FC = () => {
     };
   }, [addToast, history, isLoggedIn]);
 
+  const debtReliefContext = useMemo(() => {
+    return {
+      currentStepIndex,
+      setCurrentStepIndexContext: (index: number) => {
+        setCurrentStepIndex(index);
+      },
+      setApplicationContext: (application: IApplication) => {
+        setApplication(application);
+      },
+      getApplicationContext: () => {
+        const applicationFromLocalStorage = localStorage.getItem(
+          'drApplication'
+        );
+
+        return application
+          ? application
+          : applicationFromLocalStorage
+          ? JSON.parse(applicationFromLocalStorage)
+          : null;
+      },
+      application,
+    };
+  }, [currentStepIndex, application]);
+
   useEffect(() => {
     const applicationStorage = localStorage.getItem('drApplication');
 
@@ -131,7 +159,7 @@ const DebtReliefIndex: React.FC = () => {
   }, [location.pathname]);
 
   const componentDecorator = (
-    Step: FC<IQuestionnaireStepsProps>,
+    Step: FC<IDebtReliefStepsProps>,
     stepIndex: number,
     steps: IStep[],
     formikProps: FormikProps<IApplication>
@@ -147,112 +175,9 @@ const DebtReliefIndex: React.FC = () => {
 
   return (
     <DebtReliefAuthContext.Provider value={authContext}>
-      <DebtReliefContext.Provider
-        value={{
-          currentStepIndex,
-          setCurrentStepIndexContext: (index: number) => {
-            setCurrentStepIndex(index);
-          },
-          setApplicationContext: (application: IApplication) => {
-            setApplication(application);
-          },
-          getApplicationContext: () => {
-            const applicationFromLocalStorage = localStorage.getItem(
-              'drApplication'
-            );
-
-            return application
-              ? application
-              : applicationFromLocalStorage
-              ? JSON.parse(applicationFromLocalStorage)
-              : null;
-          },
-        }}
-      >
+      <DebtReliefContext.Provider value={debtReliefContext}>
         <Formik
-          initialValues={{
-            applicant: {
-              firstName: '',
-              middleName: '',
-              lastName: '',
-              address: '',
-              address2: '',
-              city: '',
-              state: '',
-              zip: '',
-              email: '',
-              primaryPhoneNumber: '',
-              primaryPhoneNumberConfirm: '',
-              cellPhoneNumber: '',
-              faxPhoneNumber: '',
-              dobMonth: 0,
-              dobDay: 0,
-              dobYear: 0,
-              ssn: '',
-              employer: '',
-              occupation: '',
-              workPhoneNumber: '',
-              maritalStatus: '',
-              hardshipReason: '',
-            },
-            coApplicant: {
-              firstName: '',
-              middleName: '',
-              lastName: '',
-              address: '',
-              address2: '',
-              city: '',
-              state: '',
-              zip: '',
-              email: '',
-              primaryPhoneNumber: '',
-              primaryPhoneNumberConfirm: '',
-              cellPhoneNumber: '',
-              faxPhoneNumber: '',
-              dobMonth: 0,
-              dobDay: 0,
-              dobYear: 0,
-              ssn: '',
-              employer: '',
-              occupation: '',
-              workPhoneNumber: '',
-              maritalStatus: '',
-              hardshipReason: '',
-            },
-            creditors: [],
-            income: {
-              monthlyNetPay: 0,
-              coApplicantMonthlyNetPay: 0,
-              ssnIncome: 0,
-              retirementPay: 0,
-              otherGovtBenefits: 0,
-              childSupport: 0,
-              allOtherIncome: 0,
-            },
-            expenses: {
-              monthlyRent: 0,
-              mortgage: 0,
-              utilities: 0,
-              groceries: 0,
-              automobilePayments: 0,
-              automobileExpenses: 0,
-              medical: 0,
-              insurance: 0,
-              dayCare: 0,
-              childSupport: 0,
-              installmentLoans: 0,
-              allOther: 0,
-            },
-            bankName: '',
-            bankRoutingNumber: '',
-            bankAccountNumber: '',
-            bankAccountType: '',
-            dayToMakePayment: 0,
-            secondDayToMakePayment: 0,
-            monthToStart: 0,
-            contract: '',
-            supportingDocuments: [],
-          }}
+          initialValues={initialApplicationValues}
           onSubmit={() => {
             addToast('Form submitted', { appearance: 'success' });
           }}
@@ -265,10 +190,6 @@ const DebtReliefIndex: React.FC = () => {
                   <Redirect from="/debtrelief" exact to="/debtrelief/welcome" />
                   <IfAuthSkipRoute
                     path="/debtrelief/welcome"
-                    render={() => <Welcome formikProps={formikProps} />}
-                  />
-                  <IfAuthSkipRoute
-                    path="/debtrelief/accountcreation"
                     render={() => <AccountCreation formikProps={formikProps} />}
                   />
                   <IfAuthSkipRoute
@@ -276,7 +197,11 @@ const DebtReliefIndex: React.FC = () => {
                     exact
                     component={Login}
                   />
-                  <Route path="/debtrelief/logout" exact component={Logout} />
+                  <Route
+                    path="/debtrelief/logout"
+                    exact
+                    render={() => <Logout formikProps={formikProps} />}
+                  />
                   {steps.map((s, index) => (
                     <PrivateDebtReliefRoute
                       key={s.slug}

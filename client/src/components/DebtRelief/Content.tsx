@@ -1,7 +1,7 @@
 import React, { useState, FC } from 'react';
 import { Segment, Form, Header, Message } from 'semantic-ui-react';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import DebtReliefNavigationControl from './DebtReliefNavigationControl';
 
 interface IContentProps {
   title: string;
@@ -82,7 +82,7 @@ const Content: FC<IContentProps> = ({
         <Form.TextArea label="About" placeholder="Tell us more about you..." />
         <Form.Checkbox label="I agree to the Terms and Conditions" />
       </Form>
-      <QuestionnaireNavigationControl
+      <DebtReliefNavigationControl
         submit={submit}
         isFirstStep={isFirstStep}
         handleNextClick={handleNextClick}

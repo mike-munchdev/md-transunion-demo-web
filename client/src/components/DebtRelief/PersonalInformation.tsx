@@ -1,9 +1,9 @@
 import React, { FC, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireStepsProps } from '.';
+import { IDebtReliefStepsProps } from '.';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import DebtReliefNavigationControl from './DebtReliefNavigationControl';
 import { Segment, Header, Form, Grid, Button } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput, SelectInput } from '../FormFields';
@@ -18,7 +18,7 @@ import {
 import CalculationsTable from './CalculationsTable';
 import { DebtReliefContext } from '../../utils/context';
 
-const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
+const PersonalInformation: FC<IDebtReliefStepsProps> = ({
   stepIndex,
   steps,
 
@@ -278,7 +278,7 @@ const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
           </Grid.Row>
           <Grid.Row columns={2}>
             <Grid.Column>
-              <Field name="applicant.primaryPhoneNumber">
+              <Field name="applicant.phoneNumber">
                 {(props: FieldProps) => (
                   <TextInput
                     label="Primary Phone Number"
@@ -289,7 +289,7 @@ const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
               </Field>
             </Grid.Column>
             <Grid.Column>
-              <Field name="coApplicant.primaryPhoneNumber">
+              <Field name="coApplicant.phoneNumber">
                 {(props: FieldProps) => (
                   <TextInput
                     label="Primary Phone Number"
@@ -559,7 +559,7 @@ const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
           </Grid.Row>
         </Grid>
       </Form>
-      <QuestionnaireNavigationControl
+      <DebtReliefNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

@@ -6,18 +6,18 @@ const DebtRelief = () => {
     <Fragment>
       <Container className="debt-relief-container">
         {/* <Switch>
-          <Route exact path="/debtrelief" component={Questionnaire} />
+          <Route exact path="/debtrelief" component={DebtRelief} />
           <Route exact path="/login" component={Login} />
 
           <PrivateClientRoute
             exact
             path="/debtrelief/:step"
-            component={Questionnaire}
+            component={DebtRelief}
           />
           <PrivateClientRoute
             exact
             path="/debtrelief"
-            component={Questionnaire}
+            component={DebtRelief}
           />
           <Route component={Login} />
         </Switch> */}

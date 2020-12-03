@@ -26,7 +26,7 @@ const HelpModal: FC<IHelpModal> = ({
       initialValues={{
         firstName: applicant ? applicant.firstName : '',
         lastName: applicant ? applicant.lastName : '',
-        primaryPhoneNumber: applicant ? applicant.primaryPhoneNumber : '',
+        phoneNumber: applicant ? applicant.phoneNumber : '',
         email: applicant ? applicant.email : '',
       }}
       validationSchema={helpModalSchema}
@@ -86,7 +86,7 @@ const HelpModal: FC<IHelpModal> = ({
                         />
                       )}
                     </Field>
-                    <Field name="primaryPhoneNumber">
+                    <Field name="phoneNumber">
                       {(props: FieldProps) => (
                         <TextInput
                           label="Phone Number"

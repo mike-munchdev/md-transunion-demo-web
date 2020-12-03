@@ -12,8 +12,10 @@ const [httpLinkUri, wsLinkUri] = useServerInfo();
 const httpLink = new HttpLink({
   uri: `${httpLinkUri}/graphql`,
 });
-const token = localStorage.getItem('token');
 
+const token = localStorage.getItem('token');
+const drToken = localStorage.getItem('drToken');
+console.log('setting up', token, drToken);
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
   uri: `${wsLinkUri}/graphql`,
@@ -21,6 +23,7 @@ const wsLink = new WebSocketLink({
     reconnect: true,
     connectionParams: {
       'x-auth': token,
+      'x-authdr': drToken,
     },
   },
 });
@@ -28,11 +31,13 @@ const wsLink = new WebSocketLink({
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem('token');
+  const drToken = localStorage.getItem('drToken');
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
       'x-auth': token,
+      'x-authdr': drToken,
     },
   };
 });

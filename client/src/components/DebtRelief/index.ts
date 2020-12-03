@@ -10,6 +10,7 @@ export { default as PersonalInformation } from './PersonalInformation';
 export { default as Welcome } from './Welcome';
 export { default as HelpModal } from './HelpModal';
 export { default as CreditorModal } from './CreditorModal';
+export { default as DebtReliefNavigationControl } from './DebtReliefNavigationControl';
 
 export interface ICreditor {
   id: number;
@@ -54,8 +55,8 @@ export interface IApplicantInformation {
   state: string;
   zip: string;
   email: string;
-  primaryPhoneNumber: string;
-  primaryPhoneNumberConfirm: string;
+  phoneNumber: string;
+  phoneNumberConfirm: string;
   cellPhoneNumber: string;
   faxPhoneNumber: string;
   dobMonth: number;
@@ -68,13 +69,13 @@ export interface IApplicantInformation {
   maritalStatus: string;
   hardshipReason: string;
 }
-export interface IQuestionnaireStepsProps {
+export interface IDebtReliefStepsProps {
   stepIndex: number;
   steps: IStep[];
 
   formikProps: FormikProps<IApplication>;
 }
-export interface IQuestionnaireProps {
+export interface IDebtReliefProps {
   formikProps: FormikProps<IApplication>;
 }
 export interface IApplication {
@@ -98,5 +99,5 @@ export interface IStep {
   title: string;
   description: string;
   slug: string;
-  component: FC<IQuestionnaireStepsProps>;
+  component: FC<IDebtReliefStepsProps>;
 }

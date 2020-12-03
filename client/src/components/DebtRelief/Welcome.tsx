@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireProps } from '.';
+import { IDebtReliefProps } from '.';
 
 import { Form, Image, Grid, Container, Button } from 'semantic-ui-react';
 import { stateOptions } from '../../utils/lookup';
 import { Field } from 'formik';
 import { SelectInput } from '../FormFields';
 
-const Welcome: FC<IQuestionnaireProps> = ({ formikProps }) => {
+const Welcome: FC<IDebtReliefProps> = ({ formikProps }) => {
   const history = useHistory();
 
   const { setFieldValue, setFieldTouched, values } = formikProps;
@@ -25,7 +25,11 @@ const Welcome: FC<IQuestionnaireProps> = ({ formikProps }) => {
         style={{ marginBottom: '10px' }}
         verticalAlign="middle"
       >
-        <Image src="/logo.png" size="large" />
+        <Image
+          src="/meredian-logo-trans.png"
+          size="large"
+          style={{ marginTop: '20px' }}
+        />
       </Grid>
       <p>
         Welcome to Meredian's

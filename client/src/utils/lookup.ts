@@ -177,7 +177,7 @@ export const states = [
 
 export const stateOptions = states.map((s) => ({
   key: s.numericCode,
-  text: s.state,
+  text: s.code,
   value: s.code,
 }));
 

@@ -1,15 +1,15 @@
 import React, { FC, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireStepsProps } from '.';
+import { IDebtReliefStepsProps } from '.';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import { DebtReliefNavigationControl } from '../DebtRelief/';
 import { Segment, Header, Form, Grid } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput } from '../FormFields';
 import { DebtReliefContext } from '../../utils/context';
 
-const Budget: FC<IQuestionnaireStepsProps> = ({
+const Budget: FC<IDebtReliefStepsProps> = ({
   stepIndex,
   steps,
 
@@ -285,7 +285,7 @@ const Budget: FC<IQuestionnaireStepsProps> = ({
         </Grid>
       </Form>
 
-      <QuestionnaireNavigationControl
+      <DebtReliefNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

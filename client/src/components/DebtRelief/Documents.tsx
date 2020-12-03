@@ -2,7 +2,7 @@ import React, { FC, useMemo, CSSProperties, useState, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
-import { IQuestionnaireStepsProps } from '.';
+import { IDebtReliefStepsProps } from '.';
 
 import {
   Segment,
@@ -14,7 +14,7 @@ import {
   List,
   Icon,
 } from 'semantic-ui-react';
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import DebtReliefNavigationControl from './DebtReliefNavigationControl';
 import CalculationsTable from './CalculationsTable';
 import { DebtReliefContext } from '../../utils/context';
 
@@ -46,7 +46,7 @@ const rejectStyle = {
   borderColor: '#ff1744',
 };
 
-const Documents: FC<IQuestionnaireStepsProps> = ({
+const Documents: FC<IDebtReliefStepsProps> = ({
   stepIndex,
   steps,
 
@@ -187,7 +187,7 @@ const Documents: FC<IQuestionnaireStepsProps> = ({
           </Grid.Row>
         </Grid>
       </Form>
-      <QuestionnaireNavigationControl
+      <DebtReliefNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

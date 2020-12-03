@@ -1,28 +1,37 @@
 import React, { FC, useState, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireStepsProps, ICreditor } from '.';
+import { IDebtReliefStepsProps, ICreditor } from '.';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import DebtReliefNavigationControl from './DebtReliefNavigationControl';
 import { Segment, Header, Button, Table, Icon, Grid } from 'semantic-ui-react';
 import CreditorModal from './CreditorModal';
 import { creditorOptions } from '../../utils/lookup';
 import { uniqueId } from 'lodash';
 import CalculationsTable from './CalculationsTable';
 import { DebtReliefContext } from '../../utils/context';
+import { UPDATE_APPLICATION } from '../../graphql/queries/applications';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useToasts } from 'react-toast-notifications';
 
-const Creditors: FC<IQuestionnaireStepsProps> = ({
+const Creditors: FC<IDebtReliefStepsProps> = ({
   stepIndex,
   steps,
-
   formikProps,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCreditor, setSelectedCreditor] = useState(null);
-  const { currentStepIndex, setCurrentStepIndexContext } = useContext(
-    DebtReliefContext
-  );
+  const {
+    currentStepIndex,
+    setCurrentStepIndexContext,
+    getApplicationContext,
+  } = useContext(DebtReliefContext);
+  const { addToast } = useToasts();
   const history = useHistory();
+  const applicationContext = getApplicationContext();
+  const [isLoading, setIsLoading] = useState(false);
+  console.log('applicationContext', applicationContext);
+  const [callUpdateApplication] = useMutation(UPDATE_APPLICATION);
 
   const { values, setFieldValue } = formikProps;
   const { creditors } = values;
@@ -39,18 +48,42 @@ const Creditors: FC<IQuestionnaireStepsProps> = ({
       </Header>
       <CreditorModal
         creditor={selectedCreditor}
-        handleSave={(creditor: ICreditor) => {
-          if (creditor.id) {
-            const filteredCreditors = creditors.filter(
-              (c) => c.id !== creditor.id
+        handleSave={async (creditor: ICreditor) => {
+          try {
+            const {
+              data: { updateApplication },
+            } = await callUpdateApplication({
+              variables: {
+                creditors: [...applicationContext.creditors, creditor],
+              },
+            });
+            const { ok, errors, application } = updateApplication;
+            if (ok) {
+            } else {
+              addToast(errors[0].message, {
+                appearance: 'error',
+              });
+              setIsLoading(false);
+            }
+          } catch (error) {
+            setIsLoading(false);
+            addToast(
+              'An error occurred retrieving customer information. Please try again.',
+              { appearance: 'error' }
             );
-            setFieldValue('creditors', [...filteredCreditors, { ...creditor }]);
-          } else {
-            setFieldValue('creditors', [
-              ...creditors,
-              { ...creditor, id: uniqueId() },
-            ]);
           }
+
+          // if (creditor.id) {
+          //   const filteredCreditors = creditors.filter(
+          //     (c) => c.id !== creditor.id
+          //   );
+          //   setFieldValue('creditors', [...filteredCreditors, { ...creditor }]);
+          // } else {
+          //   setFieldValue('creditors', [
+          //     ...creditors,
+          //     { ...creditor, id: uniqueId() },
+          //   ]);
+          // }
 
           setModalOpen(false);
         }}
@@ -144,7 +177,7 @@ const Creditors: FC<IQuestionnaireStepsProps> = ({
           </Table.Body>
         </Table>
       ) : null}
-      <QuestionnaireNavigationControl
+      <DebtReliefNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

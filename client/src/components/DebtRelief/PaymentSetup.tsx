@@ -1,9 +1,9 @@
 import React, { FC, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireStepsProps } from '.';
+import { IDebtReliefStepsProps } from '.';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import DebtReliefNavigationControl from './DebtReliefNavigationControl';
 import { Segment, Header, Message, Form, Grid, Image } from 'semantic-ui-react';
 import { Field, FieldProps } from 'formik';
 import { TextInput, SelectInput } from '../FormFields';
@@ -15,7 +15,7 @@ import {
 import CalculationsTable from './CalculationsTable';
 import { DebtReliefContext } from '../../utils/context';
 
-const PaymentSetup: FC<IQuestionnaireStepsProps> = ({
+const PaymentSetup: FC<IDebtReliefStepsProps> = ({
   stepIndex,
   steps,
 
@@ -169,7 +169,7 @@ const PaymentSetup: FC<IQuestionnaireStepsProps> = ({
           </Grid.Row>
         </Grid>
       </Form>
-      <QuestionnaireNavigationControl
+      <DebtReliefNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

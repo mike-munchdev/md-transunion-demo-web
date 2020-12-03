@@ -1,14 +1,14 @@
 import React, { FC, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { IQuestionnaireStepsProps } from '.';
+import { IDebtReliefStepsProps } from '.';
 
-import QuestionnaireNavigationControl from './QuestionnaireNavigationControl';
+import DebtReliefNavigationControl from './DebtReliefNavigationControl';
 import { Segment, Header } from 'semantic-ui-react';
 import CalculationsTable from './CalculationsTable';
 import { DebtReliefContext } from '../../utils/context';
 
-const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
+const PersonalInformation: FC<IDebtReliefStepsProps> = ({
   stepIndex,
   steps,
 
@@ -35,7 +35,7 @@ const PersonalInformation: FC<IQuestionnaireStepsProps> = ({
         <strong>View All Information and Submit</strong>
       </p>
 
-      <QuestionnaireNavigationControl
+      <DebtReliefNavigationControl
         submit={currentStepIndex === steps.length - 1}
         isFirstStep={currentStepIndex === 0}
         handleNextClick={() => {

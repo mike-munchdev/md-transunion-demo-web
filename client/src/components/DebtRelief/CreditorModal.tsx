@@ -31,7 +31,7 @@ const CreditorModal: FC<ICreditorModal> = ({
         currentPayment: creditor ? creditor.currentPayment : 0,
       }}
       validationSchema={creditorModalSchema}
-      onSubmit={(values) => {}}
+      onSubmit={() => {}}
     >
       {(formikProps) => {
         const {
@@ -46,10 +46,11 @@ const CreditorModal: FC<ICreditorModal> = ({
             trigger={
               <Button
                 onClick={() => handleOpen()}
-                primary
+                color="green"
                 content="Add Creditor"
                 icon="plus"
                 labelPosition="left"
+                fluid
               />
             }
             onClose={() => {
@@ -62,7 +63,7 @@ const CreditorModal: FC<ICreditorModal> = ({
             <Modal.Content>
               <Modal.Description>
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group widths={2}>
+                  <Form.Group widths="equal">
                     <Field
                       name="creditorId"
                       placeholder="Creditor"
@@ -73,6 +74,9 @@ const CreditorModal: FC<ICreditorModal> = ({
                       label="Select Creditor"
                       fluid
                     />
+                  </Form.Group>
+
+                  <Form.Group widths={2}>
                     <Field name="accountNumber">
                       {(props: FieldProps) => (
                         <TextInput
@@ -82,8 +86,6 @@ const CreditorModal: FC<ICreditorModal> = ({
                         />
                       )}
                     </Field>
-                  </Form.Group>
-                  <Form.Group widths={3}>
                     <Field name="currentBalance">
                       {(props: FieldProps) => (
                         <TextInput
@@ -93,6 +95,8 @@ const CreditorModal: FC<ICreditorModal> = ({
                         />
                       )}
                     </Field>
+                  </Form.Group>
+                  <Form.Group widths={2}>
                     <Field name="currentApr">
                       {(props: FieldProps) => (
                         <TextInput

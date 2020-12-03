@@ -17,7 +17,7 @@ import {
   Icon,
 } from 'semantic-ui-react';
 import { steps } from '../pages/DebtRelief/DebtReliefIndex';
-import { IStep, HelpModal } from '../components/Questionnaire';
+import { IStep, HelpModal } from '../components/DebtRelief';
 import { DebtReliefAuthContext, DebtReliefContext } from '../utils/context';
 
 interface IProps extends RouteProps {
@@ -31,13 +31,11 @@ const PrivateDebtReliefRoute: React.FC<IProps> = ({
   ...rest
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const { isLoggedIn, signOut } = useContext(DebtReliefAuthContext);
-  const { currentStepIndex, getApplicationContext } = useContext(
-    DebtReliefContext
-  );
+  const { isLoggedIn } = useContext(DebtReliefAuthContext);
+  const { currentStepIndex, application } = useContext(DebtReliefContext);
 
   const history = useHistory();
-  const application = getApplicationContext();
+
   const renderStep = (s: IStep) => {
     return (
       <Step
@@ -76,12 +74,7 @@ const PrivateDebtReliefRoute: React.FC<IProps> = ({
           <Grid.Column textAlign="left" verticalAlign="bottom">
             <HelpModal
               applicant={application.applicant}
-              handleSave={(
-                firstName: string,
-                lastName: string,
-                email: string,
-                phoneNumber: string
-              ) => {
+              handleSave={() => {
                 setModalOpen(false);
               }}
               handleCancel={() => {
@@ -94,10 +87,18 @@ const PrivateDebtReliefRoute: React.FC<IProps> = ({
             />
           </Grid.Column>
           <Grid.Column>
-            <Image src="/logo.png" size="large" />
+            <Image
+              src="/meredian-logo-trans.png"
+              size="large"
+              style={{ marginTop: '20px' }}
+            />
           </Grid.Column>
           <Grid.Column textAlign="right" verticalAlign="bottom">
-            <Button as="div" labelPosition="left" onClick={() => signOut()}>
+            <Button
+              as="div"
+              labelPosition="left"
+              onClick={() => history.push('/debtrelief/logout')}
+            >
               <Label as="a" basic color="blue">
                 Logout
               </Label>

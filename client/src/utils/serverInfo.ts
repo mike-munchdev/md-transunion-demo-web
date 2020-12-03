@@ -8,7 +8,7 @@ export const useServerInfo = () => {
     NODE_ENV === 'development' ? 'ws' : process.env.REACT_APP_WS_PROTOCOL;
   const serverUrl =
     NODE_ENV === 'development'
-      ? 'localhost:4001'
+      ? 'localhost:4005'
       : process.env.REACT_APP_GRAPHQL_URL;
 
   return [`${httpProtocol}://${serverUrl}`, `${wsProtocol}://${serverUrl}`];
