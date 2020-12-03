@@ -75,9 +75,9 @@ const Home: React.FC = () => {
       container
     >
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Container className="logo">
+        {/* <Container className="logo">
           <Image src="/logo.png" size="medium" />
-        </Container>
+        </Container> */}
         <Formik
           initialValues={{
             code: '',
